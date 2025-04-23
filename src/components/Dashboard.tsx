@@ -58,7 +58,7 @@ export default function Dashboard() {
   if (status === 'loading' || loading) {
     return (
       <div className="flex justify-center items-center ">
-        <div className="px-4 py-2 bg-white border-2 border-gray-400 text-gray-800 font-mono">
+        <div className="min-h-screen px-4 py-2 bg-white border-2 border-gray-400 text-gray-800 font-mono">
           Loading...
         </div>
       </div>
