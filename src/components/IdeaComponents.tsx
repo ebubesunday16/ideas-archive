@@ -1,12 +1,10 @@
 'use client'
-import React, { useState, useRef } from 'react';
 import ThemeButton from "@/components/ThemeButton";
-import {  RocketLaunch } from "@/customSVG";
-import { ArrowDown, ArrowUp01 as ArrowUp,  ChevronDown,  ChevronUp,  CopyCheck as Copy, DownloadCloud as Download, Image as ImageIcon  } from 'lucide-react';
-import { saveAs } from 'file-saver';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+import { ArrowDown, ArrowUp01 as ArrowUp, CopyCheck as Copy, DownloadCloud as Download, Image as ImageIcon } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
 
 // Competition level badge component
@@ -769,12 +767,6 @@ const CompetitorAnalysis = ({ competitors = [] }) => {
 
 
 export {
-  KeywordVariations,
-  IdeaNotes,
-  MarketAnalysis,
-  ImplementationGuide,
-  NewsletterSignup,
-  TechnicalSpecifications,
-  MonetizationPotential,
-  CompetitorAnalysis,  
+  CompetitorAnalysis, IdeaNotes, ImplementationGuide, KeywordVariations, MarketAnalysis, MonetizationPotential, NewsletterSignup,
+  TechnicalSpecifications
 };

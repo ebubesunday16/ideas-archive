@@ -1,9 +1,6 @@
-import ChatBoxComponent from "@/components/ChatBox" 
-import ChatBox2Component from "@/components/ChatBox2" 
-import ThemeButton from "@/components/ThemeButton" 
-import { ChatBox, LadyWithLaptop, PatreonBackground, RocketLaunch } from "@/customSVG" 
-import Image from "next/image" 
-import { ReactNode } from "react" 
+import ThemeButton from "@/components/ThemeButton"
+import { PatreonBackground } from "@/customSVG"
+import { ReactNode } from "react"
  
 const ReusableHero = ({className, headline, excerpt, reactButton, children}: {className?: string, headline: string, excerpt: string, reactButton: ReactNode, children: ReactNode}) => { 
   return ( 

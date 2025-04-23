@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
 import ThemeButton from '@/components/ThemeButton';
+import { supabase } from '@/lib/supabaseClient';
+import { useState } from 'react';
 
 export default function ImageUpload({ onUploadComplete }) {
   const [uploading, setUploading] = useState(false);

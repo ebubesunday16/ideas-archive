@@ -2,9 +2,9 @@
 import ThemeButton from "@/components/ThemeButton";
 import { CheckCircle, Group4, RocketLaunch, XCircle } from "@/customSVG";
 import Image from "next/image";
-import React, { useState } from "react";
-import ProcessStep from "./componets/ProcessStep";
+import { useState } from "react";
 import AnimatedCounter from "./componets/AnimatedCounter";
+import ProcessStep from "./componets/ProcessStep";
 import ProductSamplePreview from "./componets/Sample";
 
 // Testimonial Card Component

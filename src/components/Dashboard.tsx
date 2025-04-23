@@ -1,8 +1,8 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { signOut, useSession } from 'next-auth/react';
-import { getCurrentUser, getSavedIdeas, unsaveIdea } from '@/utils/usersFetch';
 import { IdeasType } from '@/types/idea';
+import { getCurrentUser, getSavedIdeas, unsaveIdea } from '@/utils/usersFetch';
+import { signOut, useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
 export default function Dashboard() {
   const { data: session, status } = useSession();

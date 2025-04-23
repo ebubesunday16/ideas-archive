@@ -1,12 +1,11 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabaseClient';
 import ThemeButton from '@/components/ThemeButton';
 import { RocketLaunch } from '@/customSVG';
-import { useRouter } from 'next/navigation';
-import { useParams } from 'next/navigation';
+import { supabase } from '@/lib/supabaseClient';
 import { IdeasType } from '@/types/idea';
+import { useParams, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 export default function EditIdeaAdmin() {
   const router = useRouter();

@@ -1,6 +1,6 @@
 import ThemeButton from "@/components/ThemeButton";
 import { Avocado, RocketLaunch } from "@/customSVG";
-import { Atom, Binoculars, Key } from 'lucide-react'
+import { Atom, Binoculars, Key } from 'lucide-react';
 import Link from "next/link";
 
 export default function CTA({ className }) {

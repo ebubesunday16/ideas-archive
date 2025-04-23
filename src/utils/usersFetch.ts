@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabaseClient";
-import { getIdeas } from "./ideasFetch";
 import { getSession } from "next-auth/react";
+import { getIdeas } from "./ideasFetch";
 
 // Get current user data
 export async function getCurrentUser() {

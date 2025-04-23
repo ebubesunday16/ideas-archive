@@ -5,15 +5,13 @@ import {
   KeywordVariations,
   MarketAnalysis,
   MonetizationPotential,
-  NewsletterSignup,
   TechnicalSpecifications
 } from "@/components/IdeaComponents";
 import ReusableHero from "@/components/ReusableHero";
 import SaveButton from "@/components/SaveButton";
-import ThemeButton from "@/components/ThemeButton";
 import { RocketLaunch } from "@/customSVG";
 import { supabase } from "@/lib/supabaseClient";
-import { fetchIdeaData, getIdeas } from "@/utils/ideasFetch";
+import { getIdeas } from "@/utils/ideasFetch";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 

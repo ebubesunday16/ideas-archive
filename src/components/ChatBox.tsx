@@ -1,4 +1,3 @@
-import React from 'react'
 import { AppleLogo, ChatBox, ThreeDots } from '@/customSVG'
 
 const ChatBoxComponent = () => {

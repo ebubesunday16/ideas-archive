@@ -1,11 +1,10 @@
 // app/admin/page.jsx
 'use client'
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabaseClient';
 import AdminInterface from '@/components/AdminInterface';
-import ThemeButton from '@/components/ThemeButton';
+import { supabase } from '@/lib/supabaseClient';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function AdminPage() {
   const [session, setSession] = useState(null);

@@ -1,7 +1,7 @@
 import ChatBoxComponent from "@/components/ChatBox"
 import ChatBox2Component from "@/components/ChatBox2"
 import ThemeButton from "@/components/ThemeButton"
-import { ChatBox, LadyWithLaptop, RocketLaunch } from "@/customSVG"
+import { LadyWithLaptop, RocketLaunch } from "@/customSVG"
 import Link from "next/link"
 
 const Hero = ({className}: {className?: string}) => {
