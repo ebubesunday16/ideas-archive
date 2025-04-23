@@ -54,7 +54,7 @@ const Page = async ({ params } : {params: {id: number}}) => {
       </ReusableHero>
       
       <div className="border-x border-black border-b mx-auto px-3 sm:px-8 pt-16">
-        {/* <SaveButton className="ml-auto" ideaId={ideaData.id} initialSaved={false}/> */}
+        <SaveButton className="ml-auto" ideaId={ideaData.id!}/>
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-2">{ideaData.headline}</h2>
           <div className="flex items-center space-x-2">

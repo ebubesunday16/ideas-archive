@@ -1,84 +1,57 @@
 'use client'
-import { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { saveIdea, unsaveIdea } from '@/utils/usersFetch'; 
-import { toast } from "sonner"
-<<<<<<< HEAD
 
-=======
->>>>>>> parent of 35395c9 (Design Tweaks)
+import { saveIdea, unsaveIdea } from '@/utils/usersFetch'
+import { Bookmark, BookmarkCheck } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import React, { useState } from 'react'
+import { toast } from 'sonner'
 
+function SaveButton({className, ideaId}: {className: string, ideaId: number,}) {
 
-export default function SaveButton({ ideaId, initialSaved = false, className }) {
-  const { status } = useSession();
-  const [isSaved, setIsSaved] = useState(initialSaved);
-  const [isLoading, setIsLoading] = useState(false);
-<<<<<<< HEAD
-  
-  
-=======
->>>>>>> parent of 35395c9 (Design Tweaks)
+    const [isSaved, setIsSaved] = useState(false)
+    
 
-  const handleToggleSave = async () => {
-    if (status !== 'authenticated') {
-      // Redirect to sign in or show sign-in modal
-      toast("You'll need to Login.")
-      return;
+    const { data: session, status } = useSession()
+
+    if (status ==="unauthenticated"){
+        toast("You need to Login!")
     }
 
-    setIsLoading(true);
-    try {
-      if (isSaved) {
-        await unsaveIdea(ideaId);
-      } else {
-        await saveIdea(ideaId);
-        console.log(ideaId)
-<<<<<<< HEAD
-        toast("Added to saved ideas");
-=======
->>>>>>> parent of 35395c9 (Design Tweaks)
-      }
-      setIsSaved(!isSaved);
-    } catch (error) {
-      console.error('Error toggling save:', error);
-    } finally {
-      setIsLoading(false);
+    const handleSave = async () => {
+        setIsSaved(prev => !prev)
+
+        if (isSaved) {
+            await unsaveIdea(ideaId)
+            toast("Idea Removed")
+        } else {
+            await saveIdea(ideaId)
+            toast("Idea Saved")
+        }
     }
+
   return (
-    <button
-      onClick={handleToggleSave}
-      disabled={isLoading || status !== 'authenticated'}
-      className={`flex items-center border border-black shadow-[2px_2px_0_0_#333333] text-sm mb-8 px-3 py-1 hover:bg-gray-200 ${className} ${
-        isSaved 
-          ? 'bg-gray-100'  
-          : 'bg-[#F6BD41]'
-<<<<<<< HEAD
-     
-=======
->>>>>>> parent of 35395c9 (Design Tweaks)
-      }`}
+    <button 
+    className={`flex items-center border border-black text-sm mb-8 px-3 py-1 bg-gray-100 ${className}`}
+    onClick={() => handleSave}
     >
-      { isLoading ? (
-        <span>Loading...</span>
-      ) : (
-        <>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 mr-1"
-            fill={isSaved ? "currentColor" : "none"}
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-            />
-          </svg>
-          {isSaved ? 'Saved' : 'Save'}
-        </>
-      )}
+        {isSaved ? (
+            <span className='flex gap-1 items-center justify-center'>
+            <span>Unsave</span>
+            <BookmarkCheck strokeWidth={1}  size={18}/>
+            </span>
+            
+        ): (
+            <span className='flex gap-1 items-center justify-center'>
+            <span>Save</span>
+            <Bookmark strokeWidth={1} size={18} />
+            </span>
+        )}
+        
+        
+
+
     </button>
-  );
-}}
+  )
+}
+
+export default SaveButton
