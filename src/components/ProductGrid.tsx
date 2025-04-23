@@ -5,7 +5,7 @@ export default async function ProductGrid() {
   const products = await getIdeas();
   
   return (
-    <section className="border-x border-b py-8 md:py-12">
+    <section className="border-x border-b py-8 md:py-12 border-black">
       <div className=" mx-auto px-4">
         {/* Header with Dashboard-style Title */}
         <div className="mb-8 border border-gray-400 bg-white">

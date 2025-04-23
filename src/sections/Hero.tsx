@@ -8,7 +8,7 @@ import Link from "next/link"
 
 const Hero = ({className}: {className?: string}) => {
   return (
-    <section className={`border-x border-b flex flex-col md:flex-row justify-between  ${className}`}>
+    <section className={`border-black border-x border-b flex flex-col md:flex-row justify-between  ${className}`}>
       
         <div className="bg-[#CEFFF0] flex-1 px-3 sm:px-8 pt-24 pb-24 space-y-4">
             <h1 className="font-bold text-2xl ">We do the Researching, you do the building
@@ -28,7 +28,7 @@ const Hero = ({className}: {className?: string}) => {
             <div className="relative">
               {/* <LadyWithLaptop className=" inline-block w-full"/> */}
               <Image src={images.lady} width={232} height={160} alt="lady" className="inline-block w-full"/>
-              <div className="absolute -top-8 left-12 sm:-right-8 sm:left-auto ">
+              <div className="absolute -top-8 left-12 sm:-right-10 sm:left-auto ">
                 <ChatBoxComponent />
               </div>
               <div className="absolute bottom-16 left-4">

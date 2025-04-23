@@ -30,7 +30,7 @@ const Header = ({className}: {className?: string}) => {
   }, []);
 
   return (
-    <header className={`border-b border-x flex justify-between items-center py-3 px-3 sm:px-8 ${className}`}>
+    <header className={`border-b border-black border-x flex justify-between items-center py-3 px-3 sm:px-8 ${className}`}>
       <div className="">
         <Link href={'/ideas'}>
           <span className="text-sm sm:text-base font-bold">
