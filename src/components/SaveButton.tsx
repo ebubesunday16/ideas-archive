@@ -35,7 +35,7 @@ function SaveButton({className, ideaId}: {className: string, ideaId: number,}) {
   return (
     <button 
     className={`flex items-center border border-black text-sm mb-8 px-3 py-1 bg-gray-100 ${className}`}
-    onClick={() => handleSave}
+    onClick={() => handleSave()}
     >
         {isSaved ? (
             <span className='flex gap-1 items-center justify-center'>
