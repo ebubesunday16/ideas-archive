@@ -1,33 +1,40 @@
 'use client'
-import { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { saveIdea, unsaveIdea } from '@/utils/usersFetch'; 
-import { toast } from "sonner"
 
+import { useState, useEffect } from 'react';
+import { saveIdea, unsaveIdea } from '@/utils/usersFetch';
+import { toast } from "sonner";
 
 export default function SaveButton({ ideaId, initialSaved = false, className }) {
-  const { status } = useSession();
   const [isSaved, setIsSaved] = useState(initialSaved);
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Check if idea is saved in localStorage on component mount
+  useEffect(() => {
+    const checkIfSaved = () => {
+      if (typeof window !== 'undefined') {
+        const savedIdeasStr = localStorage.getItem('savedIdeas') || '[]';
+        const savedIdeas = JSON.parse(savedIdeasStr);
+        setIsSaved(savedIdeas.includes(ideaId));
+      }
+    };
+    
+    checkIfSaved();
+  }, [ideaId]);
 
   const handleToggleSave = async () => {
-    if (status !== 'authenticated') {
-      // Redirect to sign in or show sign-in modal
-      toast("You'll need to Login.")
-      return;
-    }
-
     setIsLoading(true);
     try {
       if (isSaved) {
         await unsaveIdea(ideaId);
+        toast("Removed from saved ideas");
       } else {
         await saveIdea(ideaId);
-        console.log(ideaId)
+        toast("Added to saved ideas");
       }
       setIsSaved(!isSaved);
     } catch (error) {
       console.error('Error toggling save:', error);
+      toast("Failed to save idea");
     } finally {
       setIsLoading(false);
     }
@@ -36,14 +43,12 @@ export default function SaveButton({ ideaId, initialSaved = false, className }) 
   return (
     <button
       onClick={handleToggleSave}
-      disabled={isLoading || status !== 'authenticated'}
-      className={`flex items-center border border-black shadow-[2px_2px_0_0_#333333] text-sm mb-8 px-3 py-1 hover:bg-gray-200 ${className} ${
-        isSaved 
-          ? 'bg-gray-100'  
-          : 'bg-[#F6BD41]'
+      disabled={isLoading}
+      className={`flex items-center border border-black text-sm mb-8 px-3 py-1 hover:bg-gray-200 ${className} ${
+        isSaved ? 'bg-gray-100' : 'bg-[#F6BD41]'
       }`}
     >
-      { isLoading ? (
+      {isLoading ? (
         <span>Loading...</span>
       ) : (
         <>

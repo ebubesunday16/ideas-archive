@@ -1,4 +1,5 @@
 'use client'
+import SignInbtn from "@/components/SignInbtn";
 import ThemeButton from "@/components/ThemeButton";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -70,22 +71,7 @@ const Header = ({className}: {className?: string}) => {
               Dashboard
             </div>
           </Link>
-          {session ? (
-              <div 
-              className="block p-2 hover:bg-gray-50 transition-colors duration-200 text-xs  font-medium uppercase border border-gray-300 bg-white cursor-pointer" 
-              onClick={() => signOut()}
-            >
-              Sign Out
-            </div>
-
-            ):(
-                 <div 
-                 className="block p-2 hover:bg-gray-50 transition-colors duration-200 text-xs font-medium uppercase border border-gray-300 bg-white cursor-pointer" 
-                 onClick={() => signIn("google")}
-               >
-                 Log In
-               </div>
-            )}
+          <SignInbtn className="block p-2 hover:bg-gray-50 transition-colors duration-200 text-xs  font-medium uppercase border border-gray-300 bg-white cursor-pointer uppercase"/>
           
        
         </div>

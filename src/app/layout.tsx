@@ -38,8 +38,8 @@ export default function RootLayout({
         <Header className=""/>
         {children}
         <Footer />
-        <Toaster />
         </AuthProvider>
+        <Toaster />
       </body>
     </html>
   );
