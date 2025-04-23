@@ -62,8 +62,8 @@ export default function ProductCard({
               className={`transition-all duration-300 transform ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}`}
             >
               <button
-                className="text-xs font-mono flex items-center gap-1 text-gray-200"
-                
+                className="text-xs font-mono flex items-center gap-1"
+                style={{ color: accent }}
               >
                 PREVIEW
                 <span className="transition-all duration-300 transform group-hover:translate-x-1">→</span>

@@ -3,15 +3,21 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { saveIdea, unsaveIdea } from '@/utils/usersFetch'; 
 import { toast } from "sonner"
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of 35395c9 (Design Tweaks)
 
 
 export default function SaveButton({ ideaId, initialSaved = false, className }) {
   const { status } = useSession();
   const [isSaved, setIsSaved] = useState(initialSaved);
   const [isLoading, setIsLoading] = useState(false);
+<<<<<<< HEAD
   
   
+=======
+>>>>>>> parent of 35395c9 (Design Tweaks)
 
   const handleToggleSave = async () => {
     if (status !== 'authenticated') {
@@ -24,16 +30,17 @@ export default function SaveButton({ ideaId, initialSaved = false, className }) 
     try {
       if (isSaved) {
         await unsaveIdea(ideaId);
-        toast("Removed from saved ideas");
       } else {
         await saveIdea(ideaId);
         console.log(ideaId)
+<<<<<<< HEAD
         toast("Added to saved ideas");
+=======
+>>>>>>> parent of 35395c9 (Design Tweaks)
       }
       setIsSaved(!isSaved);
     } catch (error) {
       console.error('Error toggling save:', error);
-      toast("Failed to save idea");
     } finally {
       setIsLoading(false);
     }
@@ -45,10 +52,13 @@ export default function SaveButton({ ideaId, initialSaved = false, className }) 
         isSaved 
           ? 'bg-gray-100'  
           : 'bg-[#F6BD41]'
+<<<<<<< HEAD
      
+=======
+>>>>>>> parent of 35395c9 (Design Tweaks)
       }`}
     >
-      {isLoading ? (
+      { isLoading ? (
         <span>Loading...</span>
       ) : (
         <>
