@@ -1,10 +1,10 @@
+import { images } from "@/assets/images"
+import { RocketLaunch } from "@/assets/svgs"
 import ChatBoxComponent from "@/components/ChatBox"
 import ChatBox2Component from "@/components/ChatBox2"
 import ThemeButton from "@/components/ThemeButton"
-import { LadyWithLaptop, RocketLaunch } from "@/assets/svgs"
-import Link from "next/link"
 import Image from "next/image"
-import { images } from "@/assets/images"
+import Link from "next/link"
 
 const Hero = ({className}: {className?: string}) => {
   return (
