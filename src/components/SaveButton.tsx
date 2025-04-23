@@ -13,19 +13,22 @@ function SaveButton({className, ideaId}: {className: string, ideaId: number,}) {
 
     const { data: session, status } = useSession()
 
-    if (status ==="unauthenticated"){
-        toast("You need to Login!")
-    }
-
+    
     const handleSave = async () => {
-        setIsSaved(prev => !prev)
+
+        if (status ==="unauthenticated"){
+            toast("You need to Login!")
+            return  
+        }
 
         if (isSaved) {
             await unsaveIdea(ideaId)
             toast("Idea Removed")
+            setIsSaved(false)
         } else {
             await saveIdea(ideaId)
             toast("Idea Saved")
+            setIsSaved(true)
         }
     }
 
