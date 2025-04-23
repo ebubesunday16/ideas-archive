@@ -15,7 +15,7 @@ export default function ProductCard({
  
   return (
     <div
-      className="overflow-hidden border border-gray-400 bg-white hover:shadow-md transition-all duration-300"
+      className="overflow-hidden border border-black bg-white hover:shadow-md transition-all duration-300"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

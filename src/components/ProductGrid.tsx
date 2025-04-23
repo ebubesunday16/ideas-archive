@@ -8,7 +8,7 @@ export default async function ProductGrid() {
     <section className="border-x border-b py-8 md:py-12 border-black">
       <div className=" mx-auto px-4">
         {/* Header with Dashboard-style Title */}
-        <div className="mb-8 border border-gray-400 bg-white">
+        <div className="mb-8 border border-black bg-white">
           <div className="bg-gray-800 px-4 py-3 border-b border-gray-400">
             <h2 className="text-xl font-bold text-white font-mono tracking-wider">IDEA ARCHIVE</h2>
           </div>
@@ -20,7 +20,7 @@ export default async function ProductGrid() {
         </div>
         
         {/* Filter/Sort Controls - Optional Dashboard-style Element */}
-        <div className="mb-6 flex flex-wrap gap-2 border border-gray-400 bg-gray-200 p-3">
+        <div className="mb-6 flex flex-wrap gap-2 border border-black bg-gray-200 p-3">
           <span className="font-mono text-xs font-bold">FILTER BY:</span>
           <button className="bg-white text-gray-800 px-3 py-1 text-xs font-mono border border-gray-400 hover:bg-gray-100">
             ALL IDEAS

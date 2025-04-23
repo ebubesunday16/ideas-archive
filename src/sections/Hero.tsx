@@ -28,7 +28,7 @@ const Hero = ({className}: {className?: string}) => {
             <div className="relative">
               {/* <LadyWithLaptop className=" inline-block w-full"/> */}
               <Image src={images.lady} width={232} height={160} alt="lady" className="inline-block w-full"/>
-              <div className="absolute -top-8 left-12 sm:-right-10 sm:left-auto ">
+              <div className="absolute -top-14 -right-14 left-auto">
                 <ChatBoxComponent />
               </div>
               <div className="absolute bottom-16 left-4">
