@@ -1,4 +1,4 @@
-export {default as LadyWithLaptop} from './LadywithLaptop.svg'
+export {default as LadyWithLaptop} from './LadyWithLaptop.svg'
 export {default as ChatBox} from './ChatBox.svg'
 export {default as AppleLogo } from './AppleLogo.svg'
 export {default as ThreeDots } from './DotsThreeOutlineVertical.svg'

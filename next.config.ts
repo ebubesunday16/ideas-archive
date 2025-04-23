@@ -19,15 +19,7 @@ const nextConfig: NextConfig = {
 
     })
 
-    // Add this block:
-  config.ignoreWarnings = [
-    (warning) =>
-      typeof warning.message === 'string' &&
-      (
-        warning.message.includes("Can't resolve './ladywithLaptop.svg'") ||
-        warning.message.includes("Can't resolve '@/components/IdeaContainer'")
-      )
-  ];
+    
 
     return config;
   },
