@@ -1,4 +1,4 @@
-import { AppleLogo, ChatBox, ThreeDots } from '@/customSVG'
+import { AppleLogo, ChatBox, ThreeDots } from '@/assets/svgs'
 
 const ChatBoxComponent = () => {
   return (

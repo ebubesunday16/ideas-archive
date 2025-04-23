@@ -9,7 +9,7 @@ import {
 } from "@/components/IdeaComponents";
 import ReusableHero from "@/components/ReusableHero";
 import SaveButton from "@/components/SaveButton";
-import { RocketLaunch } from "@/customSVG";
+import { RocketLaunch } from "@/assets/svgs";
 import { supabase } from "@/lib/supabaseClient";
 import { getIdeas } from "@/utils/ideasFetch";
 import Image from "next/image";

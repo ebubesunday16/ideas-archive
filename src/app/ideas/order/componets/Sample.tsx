@@ -1,5 +1,5 @@
 import ThemeButton from "@/components/ThemeButton";
-import { RocketLaunch } from "@/customSVG";
+import { RocketLaunch } from "@/assets/svgs";
 
 const ProductSamplePreview = () => {
     return (

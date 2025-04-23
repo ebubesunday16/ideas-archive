@@ -1,7 +1,7 @@
 'use client'
 
 import ThemeButton from '@/components/ThemeButton';
-import { RocketLaunch } from '@/customSVG';
+import { RocketLaunch } from '@/assets/svgs';
 import { supabase } from '@/lib/supabaseClient';
 import { IdeasType } from '@/types/idea';
 import { useParams, useRouter } from 'next/navigation';

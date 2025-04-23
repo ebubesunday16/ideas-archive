@@ -1,5 +1,5 @@
 import ThemeButton from "@/components/ThemeButton";
-import { Avocado, RocketLaunch } from "@/customSVG";
+import { Avocado, RocketLaunch } from "@/assets/svgs";
 import { Atom, Binoculars, Key } from 'lucide-react';
 import Link from "next/link";
 

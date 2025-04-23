@@ -1,5 +1,5 @@
 import ThemeButton from "@/components/ThemeButton"
-import { PatreonBackground } from "@/customSVG"
+import { PatreonBackground } from "@/assets/svgs"
 import { ReactNode } from "react"
  
 const ReusableHero = ({className, headline, excerpt, reactButton, children}: {className?: string, headline: string, excerpt: string, reactButton: ReactNode, children: ReactNode}) => { 

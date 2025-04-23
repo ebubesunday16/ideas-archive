@@ -1,9 +1,10 @@
 import ChatBoxComponent from "@/components/ChatBox"
 import ChatBox2Component from "@/components/ChatBox2"
 import ThemeButton from "@/components/ThemeButton"
-import { LadyWithLaptop, RocketLaunch } from "@/customSVG"
-
+import { LadyWithLaptop, RocketLaunch } from "@/assets/svgs"
 import Link from "next/link"
+import Image from "next/image"
+import { images } from "@/assets/images"
 
 const Hero = ({className}: {className?: string}) => {
   return (
@@ -25,7 +26,8 @@ const Hero = ({className}: {className?: string}) => {
         <div className="bg-[#C4CCFD] flex-1  grid place-content-center px-3 sm:px-8 pt-24 pb-24">
           <div className="w-full h-full  my-auto">
             <div className="relative">
-              <LadyWithLaptop className=" inline-block w-full"/>
+              {/* <LadyWithLaptop className=" inline-block w-full"/> */}
+              <Image src={images.lady} width={232} height={160} alt="lady" className="inline-block w-full"/>
               <div className="absolute -top-8 left-12 sm:-right-8 sm:left-auto ">
                 <ChatBoxComponent />
               </div>

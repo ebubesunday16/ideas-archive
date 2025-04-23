@@ -1,6 +1,6 @@
 'use client'
 import ThemeButton from "@/components/ThemeButton";
-import { CheckCircle, Group4, RocketLaunch, XCircle } from "@/customSVG";
+import { CheckCircle, Group4, RocketLaunch, XCircle } from "@/assets/svgs";
 import Image from "next/image";
 import { useState } from "react";
 import AnimatedCounter from "./componets/AnimatedCounter";
