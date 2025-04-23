@@ -35,7 +35,7 @@ const Page = async ({ params } : {params: {id: number}}) => {
   return (
     <main className="mb-24 ">
       <ReusableHero
-        headline={ideaData.headline}
+        headline={ideaData.title}
         excerpt={ideaData.excerpt}
         reactButton={
           <div className="flex space-x-1.5 items-center">
@@ -56,7 +56,7 @@ const Page = async ({ params } : {params: {id: number}}) => {
       <div className="border-x border-black border-b mx-auto px-3 sm:px-8 pt-16">
         <SaveButton className="ml-auto" ideaId={ideaData.id} initialSaved={false}>Save Idea</SaveButton>
         <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-2">{ideaData.title}</h2>
+          <h2 className="text-2xl font-bold mb-2">{ideaData.headline}</h2>
           <div className="flex items-center space-x-2">
             <span className="font-medium">Main Keyword:</span>
             <span className="bg-white px-3 py-1 text-sm text-center border border-gray-400">{ideaData.main_keyword}</span>
