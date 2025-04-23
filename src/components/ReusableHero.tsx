@@ -4,7 +4,7 @@ import { ReactNode } from "react"
  
 const ReusableHero = ({className, headline, excerpt, reactButton, children}: {className?: string, headline: string, excerpt: string, reactButton: ReactNode, children: ReactNode}) => { 
   return ( 
-    <section className={`border-x border-b flex flex-col md:flex-row justify-center ${className}`}> 
+    <section className={`border-x border-b border-black flex flex-col md:flex-row justify-center ${className}`}> 
        
         <div className="bg-[#CEFFF0] w-full md:w-1/2  px-3 sm:px-8 py-24 space-y-4 flex flex-col justify-center "> 
             <div className="space-y-5"> 

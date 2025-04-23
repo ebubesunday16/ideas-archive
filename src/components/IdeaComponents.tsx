@@ -122,7 +122,7 @@ const KeywordVariations = ({ keywords = [] }) => {
          
           
           {/* Keyword List */}
-          <div id="keywordList" ref={keywordListRef} className="border border-gray-400">
+          <div id="keywordList" ref={keywordListRef} className="border border-black">
             <div className="p-2 border-b border-gray-400 text-xs uppercase font-bold">
               Select keywords:
             </div>
