@@ -37,10 +37,10 @@ export default function SaveButton({ ideaId, initialSaved = false, className }) 
     <button
       onClick={handleToggleSave}
       disabled={isLoading || status !== 'authenticated'}
-      className={`flex items-center border border-black text-sm mb-8 px-3 py-1 ${className} ${
+      className={`flex items-center border border-black shadow-[2px_2px_0_0_#333333] text-sm mb-8 px-3 py-1 hover:bg-gray-200 ${className} ${
         isSaved 
-          ? 'bg-gray-100  hover:bg-[#F6BD41]' 
-          : 'bg-gray-100 hover:bg-[#F6BD41]'
+          ? 'bg-gray-100  hover:bg-gray-200' 
+          : 'bg-[#F6BD41]'
       }`}
     >
       { isLoading ? (

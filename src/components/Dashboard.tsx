@@ -57,7 +57,7 @@ export default function Dashboard() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="flex justify-center items-center ">
         <div className="px-4 py-2 bg-white border-2 border-gray-400 text-gray-800 font-mono">
           Loading...
         </div>
@@ -67,7 +67,7 @@ export default function Dashboard() {
 
   if (status === 'unauthenticated') {
     return (
-      <div className="flex flex-col items-center p-8 bg-gray-100 min-h-screen">
+      <div className="flex flex-col items-center p-8  ">
         <div className="p-6 max-w-md bg-white border-2 border-gray-400 shadow-md">
           <h1 className="text-2xl font-bold mb-4 text-gray-800 font-mono text-center">DASHBOARD</h1>
           <p className="text-center font-mono">Please sign in to view your dashboard.</p>
@@ -89,9 +89,9 @@ export default function Dashboard() {
     <div className="border pb-8">
       {/* Header Bar */}
       <div className="bg-gray-800 px-3 py-4 sm:px-8 mb-6">
-        <div className="container mx-auto flex justify-between items-center">
+        <div className=" mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <span className="text-gray-300 font-mono text-sm hidden md:inline">
+            <span className="text-gray-300 font-mono text-sm">
               Welcome back, {session.user.name}
             </span>
           </div>

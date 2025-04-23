@@ -34,7 +34,7 @@ const Header = ({className}: {className?: string}) => {
       <div className="">
         <Link href={'/ideas'}>
           <span className="text-sm sm:text-base font-bold">
-            DREAMERBRO
+            OUTGENERATE
           </span>
         </Link>
       </div>
