@@ -1,6 +1,6 @@
 'use client';
 import { IdeasType } from '@/types/idea';
-import { getCurrentUser, getSavedIdeas, unsaveIdea } from '@/utils/usersFetch';
+import { getCurrentUser, getSavedIdeas, unsaveIdea } from '@/services/usersFetch';
 import { signOut, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 

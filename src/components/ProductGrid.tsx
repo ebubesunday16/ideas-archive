@@ -1,4 +1,4 @@
-import { getIdeas } from "@/utils/ideasFetch";
+import { getIdeas } from "@/services/ideasFetch";
 import ProductCard from "./ProductCard";
 
 export default async function ProductGrid() {

@@ -1,6 +1,6 @@
 'use client'
 
-import { saveIdea, unsaveIdea } from '@/utils/usersFetch'
+import { saveIdea, unsaveIdea } from '@/services/usersFetch'
 import { Bookmark, BookmarkCheck } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import React, { useState } from 'react'
