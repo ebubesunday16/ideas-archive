@@ -71,7 +71,7 @@ const Header = ({className}: {className?: string}) => {
               Dashboard
             </div>
           </Link>
-          <SignInbtn className="block p-2 hover:bg-gray-50 transition-colors duration-200 text-xs  font-medium uppercase border border-gray-300 bg-white"/>
+          <SignInbtn className="block p-2 hover:bg-gray-50 transition-colors duration-200 text-xs  font-medium uppercase border border-gray-300 bg-white" uppercase="uppercase"/>
           
        
         </div>

@@ -31,7 +31,6 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={` ${bricolageGrotesque.className} antialiased  mx-auto bg-[#DAF6ED] px-2 sm:px-4 md:p-0 max-w-[936px]`}
-
       >
         <AuthProvider>
         <UserCreationHandler />
