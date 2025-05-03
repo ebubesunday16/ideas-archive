@@ -47,8 +47,8 @@ const Page = async ({ params } : {params: {id: number}}) => {
         <Image
           src={ideaData.image_url}
           alt={ideaData.main_keyword}
-          width={346}
-          height={196}
+          width={600}
+          height={300}
           className=""
         />
       </ReusableHero>
