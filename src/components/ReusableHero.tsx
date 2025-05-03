@@ -17,7 +17,7 @@ const ReusableHero = ({className, headline, excerpt, reactButton, children}: {cl
         </div> 
         
         <div className="bg-[#C4CCFD] w-full md:w-1/2  px-3 sm:px-8 py-12 sm:order-1"> 
-            <div className="w-full flex flex-cocl justify-center items-center h-full relative max-w-[300px] sm:max-w-[480px] mx-auto"> 
+            <div className="w-full flex flex-cocl justify-center items-center h-full relative max-w-[90%] sm:max-w-[480px] mx-auto"> 
                 <PatreonBackground className="w-full m-auto "/> 
                 <div className="absolute top-1/2 -translate-y-1/2"> 
                     {children} 
