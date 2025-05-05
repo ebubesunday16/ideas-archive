@@ -43,7 +43,6 @@ export const authOptions: NextAuthOptions = {
                  
                 if (error) {
                   console.error("Error creating user in Supabase:", error);
-                  // You might want to handle this error differently
                 }
               }
             } catch (error) {

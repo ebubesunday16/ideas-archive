@@ -6,6 +6,10 @@ import { supabase } from '@/lib/supabaseClient';
 import { IdeasType } from '@/types/idea';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { Idea as IdeaType } from '@/ideas';
+import { useIdeasData } from '@/services/useIdeasData';
+import { toast } from "sonner"
+
 
 export default function EditIdeaAdmin() {
   const router = useRouter();
@@ -14,9 +18,12 @@ export default function EditIdeaAdmin() {
   
   const [loading, setLoading] = useState<boolean>(true);
   const [notFound, setNotFound] = useState<boolean>(false);
-  const [formTab, setFormTab] = useState('basic'); // For the form tabs: 'basic', 'keywords', etc.
+  const [formTab, setFormTab] = useState('basic'); 
+
   
-  const [formData, setFormData] = useState<IdeasType>({
+  
+  //Initialize the form
+  const [formData, setFormData] = useState<IdeaType>({
     title: '',
     main_keyword: '',
     image_url: '',
@@ -27,60 +34,47 @@ export default function EditIdeaAdmin() {
     keywords: [{ keyword: '', volume: '', competition: 'low' }],
     notes: [{ title: '', content: '' }],
     
-    marketAnalysis: {
+    market_analysis: {
       search_volume: '',
       competition_level: 'Low',
       trend: 'Steady'
     },
     
-    implementationSteps: [{ title: '', description: '', order_index: 0 }],
-    competitors: [{ name: '', url: '', traffic: '', traffic_share: 0, notes: '' }],
-    
-    monetizationPotential: {
-      subscription_revenue: '',
-      affiliate_revenue: '',
-      certification_programs: '',
-      enterprise_deals: '',
-      integration_partnerships: '',
-      ad_revenue: '',
-      total_potential: ''
-    },
-    
-    technicalSpecs: {
-      development_cost: '',
-      timeline: '',
-      maintenance_cost: '',
-      tech_stack: ''
-    }
+    monetization_potentials: [{
+      title: '',
+      content: ''
+    }],
+    competitors: [{
+      name: '',
+      url: '',
+      traffic: '',
+      traffic_share: 1,
+      notes: '',
+    }]
   });
-  
+
+  const { ideas, loading: ideasLoading, error } = useIdeasData(
+    ideaId ? { ideaId: Number(ideaId) } : {}
+  );
+
   useEffect(() => {
-    if (ideaId) {
-      fetchIdeaData(Number(ideaId));
+    if (error) {
+      setNotFound(true);
+      setLoading(false);
+    } else if (!ideasLoading && ideas.length > 0) {
+      populateForm(ideas[0]);
+      setLoading(false);
+    } else if (!ideasLoading && ideas.length === 0 && ideaId) {
+      setNotFound(true);
+      setLoading(false);
     }
-  }, [ideaId]);
+  }, [ideas, ideasLoading, error, ideaId]);
 
-  async function fetchIdeaData(id: number) {
-    try {
-      setLoading(true);
-      
-      // Fetch main idea data
-      const { data, error: ideaError } = await supabase.rpc('get_complete_idea_data', { idea_id: id });
+  
 
-      if (ideaError) {
-        console.error('Error fetching idea data:', ideaError);
-        throw ideaError;
-      }
-
-      const ideaData = data as IdeasType;
-      console.log(ideaData);
-
-      if (!ideaData) {
-        setNotFound(true);
-        return;
-      }
-
-      // Set form data from fetched data
+  //retrieves form data from database
+  function populateForm(ideaData: IdeaType) {
+    if (!ideaData) return;
       setFormData({
         title: ideaData.title || '',
         main_keyword: ideaData.main_keyword || '',
@@ -89,7 +83,7 @@ export default function EditIdeaAdmin() {
         headline: ideaData.headline || '',
         excerpt: ideaData.excerpt || '',
       
-        keywords: Array.isArray(ideaData.keywords) && ideaData.keywords.length > 0
+        keywords: ideaData.keywords.length > 0
           ? ideaData.keywords.map((kw: any) => ({
               keyword: kw.keyword || '',
               volume: kw.volume || '',
@@ -97,28 +91,20 @@ export default function EditIdeaAdmin() {
             }))
           : [{ keyword: '', volume: '', competition: 'low' }],
       
-        notes: Array.isArray(ideaData.notes) && ideaData.notes.length > 0
+        notes: ideaData.notes.length > 0
           ? ideaData.notes.map((note: any) => ({
               title: note.title || '',
               content: note.content || ''
             }))
           : [{ title: '', content: '' }],
       
-        marketAnalysis: {
+        market_analysis: {
           search_volume: ideaData.market_analysis?.search_volume || '',
           competition_level: ideaData.market_analysis?.competition_level || 'Low',
-          trend: ideaData.market_analysis?.trend || 'Steady'
+          trend: ideaData.market_analysis?.trend || 'Increasing'
         },
       
-        implementationSteps: Array.isArray(ideaData.implementation_steps) && ideaData.implementation_steps.length > 0
-          ? ideaData.implementation_steps.map((step: any) => ({
-              title: step.title || '',
-              description: step.description || '',
-              order_index: step.order_index || 0
-            }))
-          : [{ title: '', description: '', order_index: 0 }],
-      
-        competitors: Array.isArray(ideaData.competitors) && ideaData.competitors.length > 0
+        competitors: ideaData.competitors.length > 0
           ? ideaData.competitors.map((comp: any) => ({
               name: comp.name || '',
               url: comp.url || '',
@@ -128,30 +114,13 @@ export default function EditIdeaAdmin() {
             }))
           : [{ name: '', url: '', traffic: '', traffic_share: 0, notes: '' }],
       
-        monetizationPotential: {
-          subscription_revenue: ideaData.monetization_potential?.subscription_revenue || '',
-          affiliate_revenue: ideaData.monetization_potential?.affiliate_revenue || '',
-          certification_programs: ideaData.monetization_potential?.certification_programs || '',
-          enterprise_deals: ideaData.monetization_potential?.enterprise_deals || '',
-          integration_partnerships: ideaData.monetization_potential?.integration_partnerships || '',
-          ad_revenue: ideaData.monetization_potential?.ad_revenue || '',
-          total_potential: ideaData.monetization_potential?.total_potential || ''
-        },
+          monetization_potentials: ideaData.monetization_potentials.length > 0 ? ideaData.monetization_potentials.map((mon) => ({
+            title: mon.title || '',
+            content: mon.content || ''
+          })) : [{title: '', content: ''}],
       
-        technicalSpecs: {
-          development_cost: ideaData.technical_specs?.development_cost || '',
-          timeline: ideaData.technical_specs?.timeline || '',
-          maintenance_cost: ideaData.technical_specs?.maintenance_cost || '',
-          tech_stack: ideaData.technical_specs?.tech_stack || ''
-        }
       });
       
-    } catch (error) {
-      console.error('Error fetching idea data:', error);
-      alert('Error fetching idea data. Check console for details.');
-    } finally {
-      setLoading(false);
-    }
   }
   
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -180,18 +149,11 @@ export default function EditIdeaAdmin() {
         content: note.content
       }));
       
-      // Fix: use marketAnalysis instead of market_analysis
       const marketAnalysis = {
-        search_volume: formData.marketAnalysis.search_volume,
-        competition_level: formData.marketAnalysis.competition_level,
-        trend: formData.marketAnalysis.trend
+        search_volume: formData.market_analysis.search_volume,
+        competition_level: formData.market_analysis.competition_level,
+        trend: formData.market_analysis.trend
       };
-      
-      const implementationSteps = formData.implementationSteps.map((step, index) => ({
-        title: step.title,
-        description: step.description,
-        order_index: index
-      }));
       
       const competitors = formData.competitors.map(comp => ({
         name: comp.name,
@@ -201,79 +163,62 @@ export default function EditIdeaAdmin() {
         notes: comp.notes
       }));
       
-      // Fix: use monetizationPotential instead of monetization_potential
-      const monetizationPotential = {
-        subscription_revenue: formData.monetizationPotential.subscription_revenue,
-        affiliate_revenue: formData.monetizationPotential.affiliate_revenue,
-        certification_programs: formData.monetizationPotential.certification_programs,
-        enterprise_deals: formData.monetizationPotential.enterprise_deals,
-        integration_partnerships: formData.monetizationPotential.integration_partnerships,
-        ad_revenue: formData.monetizationPotential.ad_revenue,
-        total_potential: formData.monetizationPotential.total_potential
-      };
+      const monetizationPotential = formData.monetization_potentials.map((mon) => ({
+        title: mon.title,
+        content: mon.content
+      }));
       
-      // Fix: use technicalSpecs instead of technical_specs
-      const technicalSpecs = {
-        development_cost: formData.technicalSpecs.development_cost,
-        timeline: formData.technicalSpecs.timeline,
-        maintenance_cost: formData.technicalSpecs.maintenance_cost,
-        tech_stack: formData.technicalSpecs.tech_stack
-      };
-      
-      // Single RPC call to update everything in one transaction
       const { data, error } = await supabase.rpc('update_complete_idea_data', {
         p_idea_id: Number(ideaId),
         p_idea_data: ideaData,
         p_keywords: keywords,
         p_notes: notes,
-        p_market_analysis: marketAnalysis, // Fixed parameter name
-        p_implementation_steps: implementationSteps,
+        p_market_analysis: marketAnalysis,
         p_competitors: competitors,
-        p_monetization_potential: monetizationPotential, // Fixed parameter name
-        p_technical_specs: technicalSpecs // Fixed parameter name
+        p_monetization_potential: monetizationPotential
       });
       
       if (error) {
-        console.error('Update error:', error);
-        throw error;
+        console.error('Error updating idea:', error);
+        toast.error('Failed to update idea');
+        return;
       }
       
-      alert('Idea updated successfully!');
-      router.push('/ideas/admin');
-    } catch (error) {
-      console.error('Error updating idea:', error);
-      alert('Error updating idea. Check console for details.');
+      toast.success('Idea updated successfully');
+      router.push('/ideas');
+    } catch (err) {
+      console.error('Error submitting form:', err);
+      toast.error('Something went wrong');
     } finally {
       setLoading(false);
     }
   }
   
-  // Handle form input changes
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>, section?: string, index?: number, field?: string) {
     const { name, value } = e.target;
-    
+   
     if (section) {
-      if (Array.isArray(formData[section])) {
-        // Handle array fields (keywords, notes, etc.)
-        const updatedItems = [...formData[section]];
+      if (Array.isArray(formData[section as keyof Idea])) {
+        // Handle array fields (keywords, notes, monetization_potentials, etc.)
+        const updatedItems = [...(formData[section as keyof Idea] as any[])];
         if (field) {
-          updatedItems[index] = {
-            ...updatedItems[index],
+          updatedItems[index as number] = {
+            ...updatedItems[index as number],
             [field]: value
           };
         } else {
-          updatedItems[index] = {
-            ...updatedItems[index],
+          updatedItems[index as number] = {
+            ...updatedItems[index as number],
             [name]: value
           };
         }
         setFormData({ ...formData, [section]: updatedItems });
-      } else if (typeof formData[section] === 'object') {
-        // Handle nested objects (marketAnalysis, etc.)
+      } else if (typeof formData[section as keyof Idea] === 'object') {
+        // Handle nested objects (market_analysis, etc.)
         setFormData({
           ...formData,
           [section]: {
-            ...formData[section],
+            ...(formData[section as keyof Idea] as object),
             [field || name]: value
           }
         });
@@ -286,26 +231,28 @@ export default function EditIdeaAdmin() {
   
   // Add new item to array fields
   function addItem(section: string) {
-    const emptyItems = {
+    const emptyItems: Record<string, any> = {
       keywords: { keyword: '', volume: '', competition: 'low' },
       notes: { title: '', content: '' },
-      implementationSteps: { title: '', description: '', order_index: formData.implementationSteps.length },
+      monetization_potentials: { title: '', content: '' },
       competitors: { name: '', url: '', traffic: '', traffic_share: 0, notes: '' }
     };
-    
-    setFormData({
-      ...formData,
-      [section]: [...formData[section], emptyItems[section]]
-    });
+   
+    if (section in emptyItems) {
+      setFormData({
+        ...formData,
+        [section]: [...(formData[section as keyof Idea] as any[]), emptyItems[section]]
+      });
+    }
   }
   
   // Remove item from array fields
   function removeItem(section: string, index: number) {
-    const updatedItems = [...formData[section]];
+    const updatedItems = [...(formData[section as keyof Idea] as any[])];
     updatedItems.splice(index, 1);
     setFormData({ ...formData, [section]: updatedItems });
   }
-  
+
   if (notFound) {
     return (
       <div className="container mx-auto py-8 px-4">
@@ -367,13 +314,7 @@ export default function EditIdeaAdmin() {
               >
                 Market Analysis
               </button>
-              <button
-                type="button"
-                onClick={() => setFormTab('steps')}
-                className={`px-3 py-1 rounded-t-md ${formTab === 'steps' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-              >
-                Implementation
-              </button>
+              
               <button
                 type="button"
                 onClick={() => setFormTab('competitors')}
@@ -388,13 +329,7 @@ export default function EditIdeaAdmin() {
               >
                 Monetization
               </button>
-              <button
-                type="button"
-                onClick={() => setFormTab('technical')}
-                className={`px-3 py-1 rounded-t-md ${formTab === 'technical' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-              >
-                Technical
-              </button>
+             
             </div>
             
             {/* Basic Info Form */}
@@ -635,8 +570,8 @@ export default function EditIdeaAdmin() {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Search Volume</label>
                   <input
                     type="text"
-                    value={formData.marketAnalysis.search_volume}
-                    onChange={(e) => handleChange(e, 'marketAnalysis', null, 'search_volume')}
+                    value={formData.market_analysis.search_volume}
+                    onChange={(e) => handleChange(e, 'market_analysis', null, 'search_volume')}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     required
                   />
@@ -645,8 +580,8 @@ export default function EditIdeaAdmin() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Competition Level</label>
                   <select
-                    value={formData.marketAnalysis.competition_level}
-                    onChange={(e) => handleChange(e, 'marketAnalysis', null, 'competition_level')}
+                    value={formData.market_analysis.competition_level}
+                    onChange={(e) => handleChange(e, 'market_analysis', null, 'competition_level')}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     required
                   >
@@ -659,8 +594,8 @@ export default function EditIdeaAdmin() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Trend</label>
                   <select
-                    value={formData.marketAnalysis.trend}
-                    onChange={(e) => handleChange(e, 'marketAnalysis', null, 'trend')}
+                    value={formData.market_analysis.trend}
+                    onChange={(e) => handleChange(e, 'market_analysis', null, 'trend')}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     required
                   >
@@ -677,70 +612,6 @@ export default function EditIdeaAdmin() {
                   </ThemeButton>
                   <ThemeButton type="button" onClick={() => setFormTab('steps')}>
                     Next: Implementation Steps <RocketLaunch className="ml-2" />
-                  </ThemeButton>
-                </div>
-              </div>
-            )}
-            
-            {/* Implementation Steps Form */}
-            {formTab === 'steps' && (
-              <div className="space-y-4">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-bold">Implementation Steps</h2>
-                  <button
-                    type="button"
-                    onClick={() => addItem('implementationSteps')}
-                    className="text-blue-600 hover:text-blue-800 font-medium"
-                  >
-                    + Add Step
-                  </button>
-                </div>
-                
-                {formData.implementationSteps.map((step, index) => (
-                  <div key={index} className="p-4 border rounded-md bg-gray-50 space-y-3">
-                    <div className="flex justify-between items-center">
-                      <h4 className="font-medium">Step #{index + 1}</h4>
-                      {formData.implementationSteps.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeItem('implementationSteps', index)}
-                          className="text-red-600 hover:text-red-800 text-sm"
-                        >
-                          Remove
-                        </button>
-                      )}
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                      <input
-                        type="text"
-                        value={step.title}
-                        onChange={(e) => handleChange(e, 'implementationSteps', index, 'title')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                        required
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                      <textarea
-                        value={step.description}
-                        onChange={(e) => handleChange(e, 'implementationSteps', index, 'description')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                        rows={3}
-                        required
-                      />
-                    </div>
-                  </div>
-                ))}
-                
-                <div className="flex justify-between pt-4">
-                  <ThemeButton type="button" onClick={() => setFormTab('market')} className="bg-gray-200 text-gray-800">
-                    Back
-                  </ThemeButton>
-                  <ThemeButton type="button" onClick={() => setFormTab('competitors')}>
-                    Next: Competitors <RocketLaunch className="ml-2" />
                   </ThemeButton>
                 </div>
               </div>
@@ -851,159 +722,68 @@ export default function EditIdeaAdmin() {
           {/* Monetization Potential Form */}
           {formTab === 'monetization' && (
             <div className="space-y-4">
-              <h2 className="text-xl font-bold mb-4">Monetization Potential</h2>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Subscription Revenue</label>
-                  <input
-                    type="text"
-                    value={formData.monetizationPotential.subscription_revenue}
-                    onChange={(e) => handleChange(e, 'monetizationPotential', null, 'subscription_revenue')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Affiliate Revenue</label>
-                  <input
-                    type="text"
-                    value={formData.monetizationPotential.affiliate_revenue}
-                    onChange={(e) => handleChange(e, 'monetizationPotential', null, 'affiliate_revenue')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
-                </div>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold">Monetization Potential</h2>
+                <button
+                  type="button"
+                  onClick={() => addItem('monetization_potentials')}
+                  className="text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  + Add Monetization Strategy
+                </button>
               </div>
               
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Certification Programs</label>
-                  <input
-                    type="text"
-                    value={formData.monetizationPotential.certification_programs}
-                    onChange={(e) => handleChange(e, 'monetizationPotential', null, 'certification_programs')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
+              {formData.monetization_potentials.map((monetization, index) => (
+                <div key={index} className="p-4 border rounded-md bg-gray-50 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <h4 className="font-medium">Strategy #{index + 1}</h4>
+                    {formData.monetization_potentials.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeItem('monetization_potentials', index)}
+                        className="text-red-600 hover:text-red-800 text-sm"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                    <input
+                      type="text"
+                      value={monetization.title}
+                      onChange={(e) => handleChange(e, 'monetization_potentials', index, 'title')}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
+                    <textarea
+                      value={monetization.content}
+                      onChange={(e) => handleChange(e, 'monetization_potentials', index, 'content')}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      rows={3}
+                      required
+                    />
+                  </div>
                 </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Enterprise Deals</label>
-                  <input
-                    type="text"
-                    value={formData.monetizationPotential.enterprise_deals}
-                    onChange={(e) => handleChange(e, 'monetizationPotential', null, 'enterprise_deals')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Integration Partnerships</label>
-                  <input
-                    type="text"
-                    value={formData.monetizationPotential.integration_partnerships}
-                    onChange={(e) => handleChange(e, 'monetizationPotential', null, 'integration_partnerships')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Ad Revenue</label>
-                  <input
-                    type="text"
-                    value={formData.monetizationPotential.ad_revenue}
-                    onChange={(e) => handleChange(e, 'monetizationPotential', null, 'ad_revenue')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Total Potential</label>
-                <input
-                  type="text"
-                  value={formData.monetizationPotential.total_potential}
-                  onChange={(e) => handleChange(e, 'monetizationPotential', null, 'total_potential')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  required
-                />
-              </div>
-              
-              <div className="flex justify-between pt-4">
-                <ThemeButton type="button" onClick={() => setFormTab('competitors')} className="bg-gray-200 text-gray-800">
-                  Back
-                </ThemeButton>
-                <ThemeButton type="button" onClick={() => setFormTab('technical')}>
-                  Next: Technical Specs <RocketLaunch className="ml-2" />
-                </ThemeButton>
-              </div>
-            </div>
+              ))}
+    
+    <div className="flex justify-between pt-4">
+      <ThemeButton type="button" onClick={() => setFormTab('competitors')} className="bg-gray-200 text-gray-800">
+        Back
+      </ThemeButton>
+      <ThemeButton type="submit">
+        Submit <RocketLaunch className="ml-2" />
+      </ThemeButton>
+    </div>
+  </div>
           )}
           
-          {/* Technical Specs Form */}
-          {formTab === 'technical' && (
-            <div className="space-y-4">
-              <h2 className="text-xl font-bold mb-4">Technical Specifications</h2>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Development Cost</label>
-                  <input
-                    type="text"
-                    value={formData.technicalSpecs.development_cost}
-                    onChange={(e) => handleChange(e, 'technicalSpecs', null, 'development_cost')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Timeline</label>
-                  <input
-                    type="text"
-                    value={formData.technicalSpecs.timeline}
-                    onChange={(e) => handleChange(e, 'technicalSpecs', null, 'timeline')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
-                  />
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Maintenance Cost</label>
-                  <input
-                    type="text"
-                    value={formData.technicalSpecs.maintenance_cost}
-                    onChange={(e) => handleChange(e, 'technicalSpecs', null, 'maintenance_cost')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tech Stack</label>
-                  <input
-                    type="text"
-                    value={formData.technicalSpecs.tech_stack}
-                    onChange={(e) => handleChange(e, 'technicalSpecs', null, 'tech_stack')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
-                  />
-                </div>
-              </div>
-              
-              <div className="flex justify-between pt-4">
-                <ThemeButton type="button" onClick={() => setFormTab('monetization')} className="bg-gray-200 text-gray-800">
-                  Back
-                </ThemeButton>
-                <ThemeButton type="submit" className="bg-green-500 hover:bg-green-600">
-                  Save All Changes
-                </ThemeButton>
-              </div>
-            </div>
-          )}
+          
           
           {/* Submit button at the bottom */}
           <div className="mt-8 pt-4 border-t">

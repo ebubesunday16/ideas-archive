@@ -30,7 +30,7 @@ export default function ProductCard({
             <h3 className="font-mono font-bold text-sm">{title}</h3>
             {competition && (
               <div className="text-xs font-mono px-2 py-1">
-                {competition}
+                {competition || 'N/A'}
               </div>
             )}
           </div>

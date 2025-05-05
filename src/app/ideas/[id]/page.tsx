@@ -14,6 +14,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { getIdeas } from "@/services/ideasFetch";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { getIdeaByIdServerSide } from "@/services/IdeasDataServer";
 
 export async function generateStaticParams() {
   const { data } = await supabase.from('ideas').select('id')
@@ -27,8 +28,9 @@ const Page = async ({ params } : {params: {id: number}}) => {
   const { id: slug } = resolvedParams
   // const ideaData = await fetchIdeaData(slug)
 
-  const resolvedData = await getIdeas() 
-  const ideaData = resolvedData?.find((item) => item.id === Number(slug))
+  const {idea: ideaData, error} = await getIdeaByIdServerSide(slug)
+
+  console.log(ideaData)
   
   if (!ideaData) return notFound();
   
@@ -71,14 +73,13 @@ const Page = async ({ params } : {params: {id: number}}) => {
           
           <CompetitorAnalysis competitors={ideaData.competitors} />
           
-          <MarketAnalysis data={ideaData.marketAnalysis} />
+          <MarketAnalysis data={ideaData.market_analysis} />
           
           
-          <MonetizationPotential data={ideaData.monetizationPotential} />
+          <MonetizationPotential data={ideaData.monetization_potentials} />
           
-          <TechnicalSpecifications data={ideaData.technicalSpecs} />
+         
           
-          <ImplementationGuide steps={ideaData.implementationSteps} />
           
           
         </div>

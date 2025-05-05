@@ -1,8 +1,15 @@
+'use client'
+
 import { getIdeas } from "@/services/ideasFetch";
 import ProductCard from "./ProductCard";
+import { useIdeasData } from "@/services/useIdeasData";
 
-export default async function ProductGrid() {
-  const products = await getIdeas();
+export default function ProductGrid() {
+
+  
+  const {ideas: products, loading, error, totalCount} = useIdeasData({searchTerm:'', limit: 10})
+
+  console.log(products)
   
   return (
     <section className="border-x border-b py-8 md:py-12 border-black">
@@ -19,7 +26,7 @@ export default async function ProductGrid() {
           </div>
         </div>
         
-        {/* Filter/Sort Controls - Optional Dashboard-style Element */}
+        
         <div className="mb-6 flex flex-wrap gap-2 border border-black bg-gray-200 p-3">
           <span className="font-mono text-xs font-bold">FILTER BY:</span>
           <button className="bg-white text-gray-800 px-3 py-1 text-xs font-mono border border-gray-400 hover:bg-gray-100">
@@ -36,7 +43,6 @@ export default async function ProductGrid() {
           </button>
         </div>
         
-        {/* Products Grid */}
         {products?.length === 0 ? (
           <div className="p-6 text-center border border-gray-400 bg-white">
             <p className="font-mono text-gray-600">No ideas found. Please check back later.</p>
@@ -51,7 +57,7 @@ export default async function ProductGrid() {
                 category={product.main_keyword}
                 accent={"#F6BD41"}
                 id={product.id}
-                competition={product.marketAnalysis?.competition_level}
+                competition={product?.market_analysis?.competition_level}d
               />
             ))}
           </div>

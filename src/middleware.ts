@@ -30,8 +30,8 @@ export default withAuth(
 // Specify which paths this middleware should run on
 export const config = {
     matcher: [
-      "/ideas/admin",
-      "/ideas/:path*/admin"
+      // "/ideas/admin",
+      "/ideas/:path*/james"
     ],
   };
 

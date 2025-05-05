@@ -1,6 +1,10 @@
 import { supabase } from "@/lib/supabaseClient";
 import { IdeasType } from "@/types/idea";
 
+
+
+
+
 export async function fetchIdeaData(slug: number): Promise<IdeasType | null> {
     const { data, error } = await supabase
       .rpc('get_idea_data', { p_slug: slug });
@@ -9,13 +13,12 @@ export async function fetchIdeaData(slug: number): Promise<IdeasType | null> {
       console.error('Error fetching idea data:', error);
       throw error;
     }
-    // If no data is found, return null
     if (!data) return null;
     return data;
   }
 
   export async function getIdeas() {
-    // Check if localStorage is available
+    
     const isLocalStorageAvailable = () => {
       try {
         const testKey = '__test__';

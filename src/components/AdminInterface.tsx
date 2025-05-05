@@ -3,84 +3,60 @@
 import ThemeButton from '@/components/ThemeButton';
 import { RocketLaunch } from '@/assets/svgs';
 import { supabase } from '@/lib/supabaseClient';
-import { IdeasType } from '@/types/idea';
 import React, { useEffect, useState } from 'react';
+import { useIdeasData } from '@/services/useIdeasData';
+import { Idea as IdeaType } from '@/ideas';
+import { toast } from 'sonner';
 
+const formInitialize = {
+  title: '',
+  main_keyword: '',
+  image_url: '',
+  search_volume: '',
+  headline: '',
+  excerpt: '',
+  
+  keywords: [{ keyword: '', volume: '', competition: 'low' }],
+  notes: [{ title: '', content: '' }],
+  
+  market_analysis: {
+    search_volume: '',
+    competition_level: 'Low',
+    trend: 'Steady'
+  },
+  
+  monetization_potentials: [{
+    title: '',
+    content: ''
+  }],
+  competitors: [{
+    name: '',
+    url: '',
+    traffic: '',
+    traffic_share: 1,
+    notes: '',
+  }]
+}
 
 export default function AdminInterface() {
-  const [ideas, setIdeas] = useState<IdeasType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [mainView, setMainView] = useState('add'); // 'ideas' or 'add'
-  const [formTab, setFormTab] = useState('keywords'); // For the form tabs: 'basic', 'keywords', etc.
-  const [formData, setFormData] = useState({
-    // Main idea
-    title: '',
-    main_keyword: '',
-    image_url: '',
-    search_volume: '',
-    headline: '',
-    excerpt: '',
-    
-    // Keywords
-    keywords: [{ keyword: '', volume: '', competition: 'low' }],
-    
-    // Notes
-    notes: [{ title: '', content: '' }],
-    
-    // Market Analysis
-    marketAnalysis: {
-      search_volume: '',
-      competition_level: 'Low',
-      trend: 'Steady'
-    },
-    
-    // Implementation Steps
-    implementationSteps: [{ title: '', description: '', order_index: 0 }],
-    
-    // Competitors
-    competitors: [{ name: '', url: '', traffic: '', traffic_share: 0, notes: '' }],
-    
-    // Monetization Potential
-    monetizationPotential: {
-      subscription_revenue: '',
-      affiliate_revenue: '',
-      certification_programs: '',
-      enterprise_deals: '',
-      integration_partnerships: '',
-      ad_revenue: '',
-      total_potential: ''
-    },
-    
-    // Technical Specs
-    technicalSpecs: {
-      development_cost: '',
-      timeline: '',
-      maintenance_cost: '',
-      tech_stack: ''
-    }
-  });
+  const [mainView, setMainView] = useState('add'); 
+  const [formTab, setFormTab] = useState('basic'); 
+  const [formData, setFormData] = useState(formInitialize);
   
+  
+  const { ideas, loading: ideasLoading, error, refetch: fetchIdeas } = useIdeasData();
+
   useEffect(() => {
-    fetchIdeas();
-  }, []);
-
+    if (error) {
+      setLoading(false);
+    } else if (!ideasLoading && ideas.length > 0) {
+      setLoading(false);
+    } 
+  
+  }, [ideas, ideasLoading, error]);
   
 
-
-  async function fetchIdeas() {
-    try {
-      setLoading(true);
-      
-      const { data, error } = await supabase.rpc('fetch_complete_ideas');
-      if (error) throw error;
-      setIdeas(data || []);
-    } catch (error) {
-      console.error('Error fetching ideas:', error);
-      alert('Error fetching ideas. Check console for details.');
-    } finally {
-      setLoading(false);
-    }
-  }
   
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -97,16 +73,14 @@ export default function AdminInterface() {
         p_excerpt: formData.excerpt,
         p_keywords: formData.keywords,
         p_notes: formData.notes,
-        p_market_analysis: [formData.marketAnalysis],
-        p_implementation_steps: formData.implementationSteps,
+        p_market_analysis: formData.market_analysis,
         p_competitors: formData.competitors,
-        p_monetization_potential: [formData.monetizationPotential],
-        p_technical_specs: [formData.technicalSpecs]
+        p_monetization_potential: formData.monetization_potentials,
       });
       
       if (error) throw error;
       
-      alert('Idea added successfully!');
+      toast('Idea added successfully!');
       resetForm();
       fetchIdeas();
       setMainView('ideas');
@@ -119,39 +93,8 @@ export default function AdminInterface() {
   }
   
   function resetForm() {
-    setFormData({
-      title: '',
-      main_keyword: '',
-      image_url: '',
-      search_volume: '',
-      headline: '',
-      excerpt: '',
-      keywords: [{ keyword: '', volume: '', competition: 'low' }],
-      notes: [{ title: '', content: '' }],
-      marketAnalysis: {
-        search_volume: '',
-        competition_level: 'Low',
-        trend: 'Steady'
-      },
-      implementationSteps: [{ title: '', description: '', order_index: 0 }],
-      competitors: [{ name: '', url: '', traffic: '', traffic_share: 0, notes: '' }],
-      monetizationPotential: {
-        subscription_revenue: '',
-        affiliate_revenue: '',
-        certification_programs: '',
-        enterprise_deals: '',
-        integration_partnerships: '',
-        ad_revenue: '',
-        total_potential: ''
-      },
-      technicalSpecs: {
-        development_cost: '',
-        timeline: '',
-        maintenance_cost: '',
-        tech_stack: ''
-      }
-    });
-    setFormTab('basic'); // Reset to the first tab
+    setFormData(formInitialize);
+    setFormTab('basic'); 
   }
   
   // Handle form input changes
@@ -191,23 +134,24 @@ export default function AdminInterface() {
   }
   
   // Add new item to array fields
-  function addItem(section) {
-    const emptyItems = {
+  function addItem(section: string) {
+    const emptyItems: Record<string, any> = {
       keywords: { keyword: '', volume: '', competition: 'low' },
       notes: { title: '', content: '' },
-      implementationSteps: { title: '', description: '', order_index: formData.implementationSteps.length },
+      monetization_potentials: { title: '', content: '' },
       competitors: { name: '', url: '', traffic: '', traffic_share: 0, notes: '' }
     };
-    
-    setFormData({
-      ...formData,
-      [section]: [...formData[section], emptyItems[section]]
-    });
+   
+    if (section in emptyItems) {
+      setFormData({
+        ...formData,
+        [section]: [...(formData[section as keyof Idea] as any[]), emptyItems[section]]
+      });
+    }
   }
-  
   // Remove item from array fields
-  function removeItem(section, index) {
-    const updatedItems = [...formData[section]];
+  function removeItem(section: string, index: number) {
+    const updatedItems = [...(formData[section as keyof Idea] as any[])];
     updatedItems.splice(index, 1);
     setFormData({ ...formData, [section]: updatedItems });
   }
@@ -227,8 +171,8 @@ export default function AdminInterface() {
       
       if (error) throw error;
       
-      alert('Idea deleted successfully!');
-      fetchIdeas(); // Refresh the ideas list
+      toast('Idea deleted successfully!');
+      fetchIdeas(); 
     } catch (error) {
       console.error('Error deleting idea:', error);
       alert('Error deleting idea. Check console for details.');
@@ -306,10 +250,10 @@ export default function AdminInterface() {
               <button type="button" onClick={() => setFormTab('keywords')} className={`px-4 py-2 font-medium ${formTab === 'keywords' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>Keywords</button>
               <button type="button" onClick={() => setFormTab('notes')} className={`px-4 py-2 font-medium ${formTab === 'notes' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>Notes</button>
               <button type="button" onClick={() => setFormTab('market')} className={`px-4 py-2 font-medium ${formTab === 'market' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>Market Analysis</button>
-              <button type="button" onClick={() => setFormTab('steps')} className={`px-4 py-2 font-medium ${formTab === 'steps' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>Implementation</button>
+              
               <button type="button" onClick={() => setFormTab('competitors')} className={`px-4 py-2 font-medium ${formTab === 'competitors' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>Competitors</button>
               <button type="button" onClick={() => setFormTab('monetization')} className={`px-4 py-2 font-medium ${formTab === 'monetization' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>Monetization</button>
-              <button type="button" onClick={() => setFormTab('tech')} className={`px-4 py-2 font-medium ${formTab === 'tech' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}>Tech Specs</button>
+              
             </div>
             
             {/* Basic Info Form */}
@@ -550,8 +494,8 @@ export default function AdminInterface() {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Search Volume</label>
                   <input
                     type="text"
-                    value={formData.marketAnalysis.search_volume}
-                    onChange={(e) => handleChange(e, 'marketAnalysis', null, 'search_volume')}
+                    value={formData.market_analysis.search_volume}
+                    onChange={(e) => handleChange(e, 'market_analysis', null, 'search_volume')}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     required
                   />
@@ -560,8 +504,8 @@ export default function AdminInterface() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Competition Level</label>
                   <select
-                    value={formData.marketAnalysis.competition_level}
-                    onChange={(e) => handleChange(e, 'marketAnalysis', null, 'competition_level')}
+                    value={formData.market_analysis.competition_level}
+                    onChange={(e) => handleChange(e, 'market_analysis', null, 'competition_level')}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     required
                   >
@@ -574,8 +518,8 @@ export default function AdminInterface() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Trend</label>
                   <select
-                    value={formData.marketAnalysis.trend}
-                    onChange={(e) => handleChange(e, 'marketAnalysis', null, 'trend')}
+                    value={formData.market_analysis.trend}
+                    onChange={(e) => handleChange(e, 'market_analysis', null, 'trend')}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     required
                   >
@@ -590,70 +534,6 @@ export default function AdminInterface() {
                   <ThemeButton type="button" onClick={() => setFormTab('notes')} className="bg-gray-200 text-gray-800">
                     Back
                   </ThemeButton>
-                  <ThemeButton type="button" onClick={() => setFormTab('steps')}>
-                    Next: Implementation Steps <RocketLaunch className="ml-2" />
-                  </ThemeButton>
-                </div>
-              </div>
-            )}
-            
-            {/* Implementation Steps Form */}
-            {formTab === 'steps' && (
-              <div className="space-y-4">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-bold">Implementation Steps</h2>
-                  <button
-                    type="button"
-                    onClick={() => addItem('implementationSteps')}
-                    className="text-blue-600 hover:text-blue-800 font-medium"
-                  >
-                    + Add Step
-                  </button>
-                </div>
-                
-                {formData.implementationSteps.map((step, index) => (
-                  <div key={index} className="p-4 border rounded-md bg-gray-50 space-y-3">
-                    <div className="flex justify-between items-center">
-                      <h4 className="font-medium">Step #{index + 1}</h4>
-                      {formData.implementationSteps.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeItem('implementationSteps', index)}
-                          className="text-red-600 hover:text-red-800 text-sm"
-                        >
-                          Remove
-                        </button>
-                      )}
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                      <input
-                        type="text"
-                        value={step.title}
-                        onChange={(e) => handleChange(e, 'implementationSteps', index, 'title')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                        required
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                      <textarea
-                        value={step.description}
-                        onChange={(e) => handleChange(e, 'implementationSteps', index, 'description')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                        rows="2"
-                        required
-                      />
-                    </div>
-                  </div>
-                ))}
-                
-                <div className="flex justify-between pt-4">
-                  <ThemeButton type="button" onClick={() => setFormTab('market')} className="bg-gray-200 text-gray-800">
-                    Back
-                  </ThemeButton>
                   <ThemeButton type="button" onClick={() => setFormTab('competitors')}>
                     Next: Competitors <RocketLaunch className="ml-2" />
                   </ThemeButton>
@@ -661,7 +541,6 @@ export default function AdminInterface() {
               </div>
             )}
             
-            {/* Competitors Form */}
             {/* Competitors Form */}
             {formTab === 'competitors' && (
               <div className="space-y-4">
@@ -767,154 +646,69 @@ export default function AdminInterface() {
             
             {/* Monetization Potential Form */}
             {formTab === 'monetization' && (
-              <div className="space-y-4">
-                <h2 className="text-xl font-bold mb-4">Monetization Potential</h2>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Subscription Revenue</label>
-                  <input
-                    type="text"
-                    value={formData.monetizationPotential.subscription_revenue}
-                    onChange={(e) => handleChange(e, 'monetizationPotential', null, 'subscription_revenue')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">Example: $85K-$120K/month</p>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Affiliate Revenue</label>
-                  <input
-                    type="text"
-                    value={formData.monetizationPotential.affiliate_revenue}
-                    onChange={(e) => handleChange(e, 'monetizationPotential', null, 'affiliate_revenue')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Certification Programs</label>
-                  <input
-                    type="text"
-                    value={formData.monetizationPotential.certification_programs}
-                    onChange={(e) => handleChange(e, 'monetizationPotential', null, 'certification_programs')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Enterprise Deals</label>
-                  <input
-                    type="text"
-                    value={formData.monetizationPotential.enterprise_deals}
-                    onChange={(e) => handleChange(e, 'monetizationPotential', null, 'enterprise_deals')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Integration Partnerships</label>
-                  <input
-                    type="text"
-                    value={formData.monetizationPotential.integration_partnerships}
-                    onChange={(e) => handleChange(e, 'monetizationPotential', null, 'integration_partnerships')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Ad Revenue</label>
-                  <input
-                    type="text"
-                    value={formData.monetizationPotential.ad_revenue}
-                    onChange={(e) => handleChange(e, 'monetizationPotential', null, 'ad_revenue')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Total Potential</label>
-                  <input
-                    type="text"
-                    value={formData.monetizationPotential.total_potential}
-                    onChange={(e) => handleChange(e, 'monetizationPotential', null, 'total_potential')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
-                  />
-                </div>
-                
-                <div className="flex justify-between pt-4">
-                  <ThemeButton type="button" onClick={() => setFormTab('competitors')} className="bg-gray-200 text-gray-800">
-                    Back
-                  </ThemeButton>
-                  <ThemeButton type="button" onClick={() => setFormTab('tech')}>
-                    Next: Technical Specs <RocketLaunch className="ml-2" />
-                  </ThemeButton>
-                </div>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold">Monetization Potential</h2>
+                <button
+                  type="button"
+                  onClick={() => addItem('monetization_potentials')}
+                  className="text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  + Add Monetization Strategy
+                </button>
               </div>
-            )}
+              
+              {formData.monetization_potentials.map((monetization, index) => (
+                <div key={index} className="p-4 border rounded-md bg-gray-50 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <h4 className="font-medium">Strategy #{index + 1}</h4>
+                    {formData.monetization_potentials.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeItem('monetization_potentials', index)}
+                        className="text-red-600 hover:text-red-800 text-sm"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                    <input
+                      type="text"
+                      value={monetization.title}
+                      onChange={(e) => handleChange(e, 'monetization_potentials', index, 'title')}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
+                    <textarea
+                      value={monetization.content}
+                      onChange={(e) => handleChange(e, 'monetization_potentials', index, 'content')}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      rows={3}
+                      required
+                    />
+                  </div>
+                </div>
+              ))}
+    
+    <div className="flex justify-between pt-4">
+      <ThemeButton type="button" onClick={() => setFormTab('competitors')} className="bg-gray-200 text-gray-800">
+        Back
+      </ThemeButton>
+      <ThemeButton type="submit">
+        Next: Submit <RocketLaunch className="ml-2" />
+      </ThemeButton>
+    </div>
+  </div>
+          )}
             
-            {/* Technical Specs Form */}
-            {formTab === 'tech' && (
-              <div className="space-y-4">
-                <h2 className="text-xl font-bold mb-4">Technical Specifications</h2>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Development Cost</label>
-                  <input
-                    type="text"
-                    value={formData.technicalSpecs.development_cost}
-                    onChange={(e) => handleChange(e, 'technicalSpecs', null, 'development_cost')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
-                  />
-                  <p className="text-xs text-gray-500 mt-1">Example: $80K-$120K</p>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Timeline</label>
-                  <input
-                    type="text"
-                    value={formData.technicalSpecs.timeline}
-                    onChange={(e) => handleChange(e, 'technicalSpecs', null, 'timeline')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
-                  />
-                  <p className="text-xs text-gray-500 mt-1">Example: 4-6 months</p>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Maintenance Cost</label>
-                  <input
-                    type="text"
-                    value={formData.technicalSpecs.maintenance_cost}
-                    onChange={(e) => handleChange(e, 'technicalSpecs', null, 'maintenance_cost')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tech Stack</label>
-                  <input
-                    type="text"
-                    value={formData.technicalSpecs.tech_stack}
-                    onChange={(e) => handleChange(e, 'technicalSpecs', null, 'tech_stack')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
-                  />
-                  <p className="text-xs text-gray-500 mt-1">Example: Next.js, Node.js, MongoDB, AWS S3</p>
-                </div>
-                
-                <div className="flex justify-between pt-4">
-                  <ThemeButton type="button" onClick={() => setFormTab('monetization')} className="bg-gray-200 text-gray-800">
-                    Back
-                  </ThemeButton>
-                  <ThemeButton type="submit" className="bg-green-600">
-                    Submit Idea <RocketLaunch className="ml-2" />
-                  </ThemeButton>
-                </div>
-              </div>
-            )}
+            
           </form>
         </div>
       )}
