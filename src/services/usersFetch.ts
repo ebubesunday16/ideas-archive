@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabaseClient";
 import { getSession } from "next-auth/react";
 import { getIdeas } from "./ideasFetch";
+import { getIdeasServerSide } from "./IdeasDataServer";
 
 // Get current user data
 export async function getCurrentUser() {
@@ -51,7 +52,7 @@ export async function getSavedIdeas() {
   const savedIdeasStr = localStorage.getItem('savedIdeas') || '[]';
   const savedIdsArray  = JSON.parse(savedIdeasStr);
 
-  const resolvedIdeas = await getIdeas();
+  const {ideas:resolvedIdeas, error} = await getIdeasServerSide()
 
   const savedIdeas = resolvedIdeas?.filter((item) => savedIdsArray.includes(item.id))
 
