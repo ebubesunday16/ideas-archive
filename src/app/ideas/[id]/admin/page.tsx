@@ -1,14 +1,13 @@
 'use client'
 
-import ThemeButton from '@/components/ThemeButton';
 import { RocketLaunch } from '@/assets/svgs';
+import ThemeButton from '@/components/ThemeButton';
+import { Idea as IdeaType } from '@/ideas';
 import { supabase } from '@/lib/supabaseClient';
-import { IdeasType } from '@/types/idea';
+import { useIdeasData } from '@/services/useIdeasData';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { Idea as IdeaType } from '@/ideas';
-import { useIdeasData } from '@/services/useIdeasData';
-import { toast } from "sonner"
+import { toast } from "sonner";
 
 
 export default function EditIdeaAdmin() {

@@ -1,6 +1,5 @@
 import { supabase } from "@/lib/supabaseClient";
 import { getSession } from "next-auth/react";
-import { getIdeas } from "./ideasFetch";
 import { getIdeasServerSide } from "./IdeasDataServer";
 
 // Get current user data

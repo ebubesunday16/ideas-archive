@@ -1,20 +1,17 @@
+import { RocketLaunch } from "@/assets/svgs";
 import {
   CompetitorAnalysis,
   IdeaNotes,
-  ImplementationGuide,
   KeywordVariations,
   MarketAnalysis,
-  MonetizationPotential,
-  TechnicalSpecifications
+  MonetizationPotential
 } from "@/components/IdeaComponents";
 import ReusableHero from "@/components/ReusableHero";
 import SaveButton from "@/components/SaveButton";
-import { RocketLaunch } from "@/assets/svgs";
 import { supabase } from "@/lib/supabaseClient";
-import { getIdeas } from "@/services/ideasFetch";
+import { getIdeaByIdServerSide } from "@/services/IdeasDataServer";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getIdeaByIdServerSide } from "@/services/IdeasDataServer";
 
 export async function generateStaticParams() {
   const { data } = await supabase.from('ideas').select('id')
