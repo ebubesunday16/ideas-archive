@@ -13,12 +13,12 @@ import { getIdeaByIdServerSide } from "@/services/IdeasDataServer";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
-export async function generateStaticParams() {
-  const { data } = await supabase.from('ideas').select('id')
-  return data?.map((idea) => ({
-    slug: idea.id.toString(),
-  })) || []
-}
+// export async function generateStaticParams() {
+//   const { data } = await supabase.from('ideas').select('id')
+//   return data?.map((idea) => ({
+//     slug: idea.id.toString(),
+//   })) || []
+// }
 
 const Page = async ({ params } : {params: {id: number}}) => {
   const resolvedParams = await params
