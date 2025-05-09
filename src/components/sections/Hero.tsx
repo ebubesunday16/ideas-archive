@@ -13,7 +13,7 @@ const Hero = ({className}: {className?: string}) => {
         <div className="bg-[#CEFFF0] flex-1 px-3 sm:px-8 pt-24 pb-24 space-y-4">
             <h1 className="font-bold text-2xl ">We do the Researching, you do the building
             </h1>
-            <p className="text-sm"> Find low-competition keywords no one else is targeting and stay ahead in your SEO game.
+            <p className="text-sm"> Find low-competition keywords no one else is targeting and stay ahead in your SEO game. Get your own idea, just for you.
             </p>
             <Link href={'/ideas/order'}>
               <ThemeButton className="bg-white cursor-pointer mt-4 text-xs hover:bg-gray-100">

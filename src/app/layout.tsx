@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
-import Header from "@/sections/Header";
+import Header from "@/components/sections/Header";
 import AuthProvider from "@/components/AuthProvider";
 import UserCreationHandler from "@/components/UserCreationHandler";
-import Footer from "@/sections/Footer";
+import Footer from "@/components/sections/Footer";
 import { Toaster } from "@/components/ui/sonner"
 
 

@@ -13,7 +13,7 @@ export default function Dashboard() {
   
   // Collapsible sections state
   const [ideasOpen, setIdeasOpen] = useState(true);
-  const [profileOpen, setProfileOpen] = useState(true);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [statsOpen, setStatsOpen] = useState(true);
 
   useEffect(() => {
@@ -86,8 +86,7 @@ export default function Dashboard() {
     : new Date().toLocaleDateString();
 
   return (
-    <div className="border pb-8">
-      {/* Header Bar */}
+    <div className="border border-black pb-8">
       <div className="bg-gray-800 px-3 py-4 sm:px-8 mb-6">
         <div className=" mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">

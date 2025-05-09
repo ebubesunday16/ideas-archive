@@ -1,5 +1,6 @@
 'use client'
 import ThemeButton from "@/components/ThemeButton";
+import { Sparkles, TrendingUp, Zap } from "lucide-react";
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -9,13 +10,46 @@ export default function ProductCard({
   category,
   competition,
   accent,
-  id
-}: {title: string, description: string, category: string, accent: string, competition: string, id: number}) {
+  id,
+  className,
+}: {title: string, description: string, category: string, accent: string, competition: string, id: string, className: string}) {
   const [isHovered, setIsHovered] = useState(false);
+
+
+  const getCompetitionBadge = () => {
+    if (!competition) return null;
+    
+    switch(competition.toLowerCase()) {
+      case 'low':
+        return (
+          <div className="flex items-center gap-1 bg-green-100 text-green-800 px-2 py-1 text-xs rounded-sm">
+            <Zap className="h-3 w-3" />
+            <span>Low</span>
+          </div>
+        );
+      case 'medium':
+        return (
+          <div className="flex items-center gap-1 bg-yellow-100 text-yellow-800 px-2 py-1 text-xs rounded-sm">
+            <TrendingUp className="h-3 w-3" />
+            <span>Medium</span>
+          </div>
+        );
+      case 'high':
+        return (
+          <div className="flex items-center gap-1 bg-red-100 text-red-800 px-2 py-1 text-xs rounded-sm">
+            <Sparkles className="h-3 w-3" />
+            <span>High</span>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
  
   return (
     <div
-      className="overflow-hidden border border-black bg-white hover:shadow-md transition-all duration-300"
+      className={`overflow-hidden border border-black bg-white hover:shadow-md transition-all duration-300 ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -24,13 +58,13 @@ export default function ProductCard({
         style={{ backgroundColor: accent }}
       ></div>
       
-      <Link href={`/ideas/${id.toString()}`}>
+      <Link href={`/ideas/${id}`}>
         <div className="px-3 py-2 bg-gray-200 border-b border-gray-400">
           <div className="flex justify-between items-center">
             <h3 className="font-mono font-bold text-sm">{title}</h3>
             {competition && (
               <div className="text-xs font-mono px-2 py-1">
-                {competition || 'N/A'}
+                {getCompetitionBadge()}
               </div>
             )}
           </div>

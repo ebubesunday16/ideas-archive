@@ -1,16 +1,17 @@
-import ProductGrid from "@/components/ProductGrid";
-import Hero from "@/sections/Hero";
+import { getServerSession } from "next-auth";
+import SignedComponent from "../../components/SignedComponent";
+import UnSignedComponent from "../../components/UnSignedComponent";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
-export default function Page() {
+export default async function Page() {
+  
+  const session = await getServerSession(authOptions)
+
   return (
     <main className="pb-16">
-      <Hero className=""/>
-      {/* <MarqueeComponent /> */}
-      <ProductGrid />
-      {/* <Testimonials /> */}
-      {/* <CTA /> */}
-      
 
+      {session ? (<SignedComponent />) : (<UnSignedComponent />) }
+      
     </main>
     
   );
