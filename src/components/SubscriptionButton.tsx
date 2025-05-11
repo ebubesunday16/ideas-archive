@@ -19,6 +19,7 @@ export default function SubscriptionButton({
   const [loading, setLoading] = useState(true);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscriptionData, setSubscriptionData] = useState<any>(null);
+  const [isGumroadLoaded, setIsGumroadLoaded] = useState(false);
 
   // Check if user is already subscribed
   useEffect(() => {
@@ -27,13 +28,6 @@ export default function SubscriptionButton({
     } else {
       setLoading(false);
     }
-
-    // Initialize Gumroad overlay if it exists
-    return () => {
-      if (window.GumroadOverlay) {
-        window.GumroadOverlay.reload();
-      }
-    };
   }, [session]);
 
   const checkSubscriptionStatus = async () => {
@@ -53,10 +47,28 @@ export default function SubscriptionButton({
 
   // Function to handle the button click
   const handleSubscriptionClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    
     if (!session?.user) {
-      e.preventDefault();
       // Redirect to sign in page first
       window.location.href = `/api/auth/signin?callbackUrl=${encodeURIComponent(window.location.href)}`;
+      return;
+    }
+    
+    // Only try to open overlay if Gumroad JS is loaded
+    if (isGumroadLoaded && window.GumroadOverlay) {
+      const overlayOptions = {
+        wanted: true
+      };
+      
+      // Add user email if available
+      if (session?.user?.email) {
+        overlayOptions['email'] = session.user.email;
+      }
+      
+      window.GumroadOverlay.show(productId, overlayOptions);
+    } else {
+      console.warn('Gumroad overlay not yet loaded');
     }
   };
 
@@ -77,22 +89,19 @@ export default function SubscriptionButton({
 
   return (
     <>
-      <a
+      <button
         className={`gumroad-button ${className}`}
-        href={`https://gumroad.com/l/${productId}?wanted=true${session?.user?.email ? `&email=${encodeURIComponent(session.user.email)}` : ''}`}
-        data-gumroad-overlay-checkout="true"
         onClick={handleSubscriptionClick}
       >
         {buttonText}
-      </a>
+      </button>
       
       <Script
         src="https://gumroad.com/js/gumroad.js"
         strategy="lazyOnload"
         onLoad={() => {
-          if (window.GumroadOverlay) {
-            window.GumroadOverlay.reload();
-          }
+          setIsGumroadLoaded(true);
+          console.log('Gumroad script loaded');
         }}
       />
     </>
