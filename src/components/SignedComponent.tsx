@@ -10,7 +10,7 @@ const SignedComponent = () => {
         <Dashboard/>
         <ProductGrid />
         <Hero className=""/>
-        <SubscriptionButton productId='tvjili'/>
+        <SubscriptionButton productId='ideas'/>
         
         
     </div>
