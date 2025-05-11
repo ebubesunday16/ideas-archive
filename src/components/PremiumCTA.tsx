@@ -64,11 +64,11 @@ export default function PremiumCTA({ productId = 'ideas' }) {
       {/* Main content */}
       <div className="p-5">
         <h2 className="font-mono text-xl font-bold mb-3 text-center">
-          SUPERCHARGE YOUR IDEA GENERATION
+          BECOME AN EXCLUSIVE MEMBER
         </h2>
         
         <p className="font-mono text-sm text-center mb-5">
-          Get unlimited access to our premium idea archive and exclusive tools
+          Get unlimited access to our idea archive, updates, and be a supporter to this journey.
         </p>
         
         {/* Features grid */}
@@ -79,7 +79,7 @@ export default function PremiumCTA({ productId = 'ideas' }) {
               <span className="font-mono font-bold">UNLIMITED IDEAS</span>
             </div>
             <p className="font-mono text-xs text-gray-600">
-              Access our full database of 100+ validated business ideas
+              Get firsthand update to ideas as they pop up everyday.
             </p>
           </div>
           
@@ -96,31 +96,17 @@ export default function PremiumCTA({ productId = 'ideas' }) {
           <div className="border border-gray-300 p-3">
             <div className="flex items-center gap-2 mb-2">
               <Sparkles className="h-5 w-5 text-yellow-500" />
-              <span className="font-mono font-bold">WEEKLY UPDATES</span>
+              <span className="font-mono font-bold">SUPPORT</span>
             </div>
             <p className="font-mono text-xs text-gray-600">
-              Get 5-10 fresh market opportunities every week
+              Outgenerate is managed by users who pay. Support our effort by being a subscriber.
             </p>
           </div>
           
-          <div className="border border-gray-300 p-3">
-            <div className="flex items-center gap-2 mb-2">
-              <ArrowRight className="h-5 w-5 text-yellow-500" />
-              <span className="font-mono font-bold">EXPORT & SHARE</span>
-            </div>
-            <p className="font-mono text-xs text-gray-600">
-              Download ideas as PDF or share with your team
-            </p>
-          </div>
+          
         </div>
         
-        {/* Testimonial */}
-        <div className="bg-gray-100 p-3 border-l-4 border-yellow-400 mb-6">
-          <p className="font-mono text-sm italic">
-            "This tool saved me weeks of market research and helped me launch my SaaS in record time."
-          </p>
-          <p className="font-mono text-xs text-gray-500 mt-1">— Alex K., Founder</p>
-        </div>
+        
         
         {/* Action button */}
         <div className="flex justify-center mb-4">
@@ -138,7 +124,7 @@ export default function PremiumCTA({ productId = 'ideas' }) {
         
         {/* Price info */}
         <p className="text-center font-mono text-xs text-gray-500">
-          Only $19/month • Cancel anytime • 30-day money back guarantee
+          Only $9.99/month • Cancel anytime • 30-day money back guarantee
         </p>
       </div>
       
@@ -147,11 +133,11 @@ export default function PremiumCTA({ productId = 'ideas' }) {
         <div className="flex justify-between items-center">
           <p className="font-mono text-xs">
             <span className="text-gray-500">Users: </span>
-            <span className="font-bold">2,400+</span>
+            <span className="font-bold">400+</span>
           </p>
           <p className="font-mono text-xs">
             <span className="text-gray-500">Success rate: </span>
-            <span className="font-bold">78%</span>
+            <span className="font-bold">87%</span>
           </p>
         </div>
       </div>
