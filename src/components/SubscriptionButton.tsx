@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import Script from 'next/script';
@@ -18,7 +19,7 @@ export default function SubscriptionButton({
   const [loading, setLoading] = useState(true);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscriptionData, setSubscriptionData] = useState<any>(null);
-  
+
   // Check if user is already subscribed
   useEffect(() => {
     if (session?.user) {
@@ -26,33 +27,21 @@ export default function SubscriptionButton({
     } else {
       setLoading(false);
     }
-  }, [session]);
-  
-  // Handle Gumroad overlay initialization
-  useEffect(() => {
-    // Initialize Gumroad overlay when component mounts
-    const script = document.createElement('script');
-    script.src = 'https://gumroad.com/js/gumroad.js';
-    script.async = true;
-    script.onload = () => {
+
+    // Initialize Gumroad overlay if it exists
+    return () => {
       if (window.GumroadOverlay) {
         window.GumroadOverlay.reload();
       }
     };
-    document.body.appendChild(script);
-    
-    // Cleanup function
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
+  }, [session]);
 
   const checkSubscriptionStatus = async () => {
     try {
       setLoading(true);
       const response = await fetch('/api/check-subscription');
       const data = await response.json();
-     
+      
       setIsSubscribed(data.subscribed);
       setSubscriptionData(data);
     } catch (error) {
@@ -61,31 +50,20 @@ export default function SubscriptionButton({
       setLoading(false);
     }
   };
-  
+
   // Function to handle the button click
   const handleSubscriptionClick = (e: React.MouseEvent) => {
     if (!session?.user) {
       e.preventDefault();
       // Redirect to sign in page first
       window.location.href = `/api/auth/signin?callbackUrl=${encodeURIComponent(window.location.href)}`;
-      return false;
     }
-    
-    // Add email as a custom field to pass to Gumroad
-    if (session?.user?.email) {
-      const overlay = document.querySelector('.gumroad-overlay-iframe');
-      if (overlay) {
-        overlay.setAttribute('data-email', session.user.email);
-      }
-    }
-    
-    return true;
   };
-  
+
   if (loading) {
     return <div className="animate-pulse">Loading...</div>;
   }
-  
+
   if (isSubscribed) {
     return (
       <div className="text-green-600 font-medium">
@@ -96,27 +74,27 @@ export default function SubscriptionButton({
       </div>
     );
   }
-  
+
   return (
     <>
       <a
         className={`gumroad-button ${className}`}
-        href={`https://gumroad.com/l/${productId}`}
+        href={`https://gumroad.com/l/${productId}?wanted=true${session?.user?.email ? `&email=${encodeURIComponent(session.user.email)}` : ''}`}
         data-gumroad-overlay-checkout="true"
         onClick={handleSubscriptionClick}
       >
         {buttonText}
       </a>
       
-      {/* Add hidden email field to help with webhook processing */}
-      {session?.user?.email && (
-        <input 
-          type="hidden" 
-          name="email" 
-          id="gumroad-custom-email" 
-          value={session.user.email} 
-        />
-      )}
+      <Script
+        src="https://gumroad.com/js/gumroad.js"
+        strategy="lazyOnload"
+        onLoad={() => {
+          if (window.GumroadOverlay) {
+            window.GumroadOverlay.reload();
+          }
+        }}
+      />
     </>
   );
 }
