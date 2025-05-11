@@ -5,9 +5,9 @@ import React from 'react'
 function SignInbtn({ className, uppercase }: { className: string, uppercase?: string}) {
     const {data: session, status} = useSession()
   return (
-      <li className={`${className}`} >
+      <li className={`${className} hover:underline`} >
     {session ? (
-          <button onClick={()=> signOut()} className={uppercase}>
+          <button onClick={()=> signOut()} className={`${uppercase} `}>
           Sign Out
           </button>
       ) : (
