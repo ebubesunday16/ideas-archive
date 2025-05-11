@@ -117,7 +117,6 @@ export default function PremiumCTA({
     );
   }
   
-  // Standard CTA for non-premium users
   return (
     <div className="border-2 border-gray-800 bg-gray-50 overflow-hidden relative">
       {/* Premium badge corner ribbon */}
