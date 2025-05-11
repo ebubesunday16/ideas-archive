@@ -174,15 +174,7 @@ export default function PremiumCTA({
               Get 5-10 fresh market opportunities every week
             </p>
           </div>
-          <div className="border border-gray-300 p-3">
-            <div className="flex items-center gap-2 mb-2">
-              <Zap className="h-5 w-5 text-yellow-500" />
-              <span className="font-mono font-bold"> SUPPORT</span>
-            </div>
-            <p className="font-mono text-xs text-gray-600">
-            Outgenerate is managed by users who pay. Support our by being a subscriber.
-            </p>
-          </div>
+          
           
           
         </div>
