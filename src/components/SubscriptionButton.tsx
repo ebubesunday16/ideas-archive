@@ -20,6 +20,13 @@ export default function SubscriptionButton({
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscriptionData, setSubscriptionData] = useState<any>(null);
   const [isGumroadLoaded, setIsGumroadLoaded] = useState(false);
+  const [isWaitingForGumroad, setIsWaitingForGumroad] = useState(false);
+  
+  // Store click details for delayed execution
+  const [pendingOverlayRequest, setPendingOverlayRequest] = useState<null | {
+    productId: string;
+    options: any;
+  }>(null);
 
   // Check if user is already subscribed
   useEffect(() => {
@@ -29,6 +36,19 @@ export default function SubscriptionButton({
       setLoading(false);
     }
   }, [session]);
+
+  // Effect to handle pending overlay requests when script loads
+  useEffect(() => {
+    if (isGumroadLoaded && pendingOverlayRequest && window.GumroadOverlay) {
+      // Execute the pending request
+      window.GumroadOverlay.show(
+        pendingOverlayRequest.productId,
+        pendingOverlayRequest.options
+      );
+      setPendingOverlayRequest(null);
+      setIsWaitingForGumroad(false);
+    }
+  }, [isGumroadLoaded, pendingOverlayRequest]);
 
   const checkSubscriptionStatus = async () => {
     try {
@@ -55,20 +75,36 @@ export default function SubscriptionButton({
       return;
     }
     
-    // Only try to open overlay if Gumroad JS is loaded
+    const overlayOptions = {
+      wanted: true
+    };
+    
+    // Add user email if available
+    if (session?.user?.email) {
+      overlayOptions['email'] = session.user.email;
+    }
+    
+    // Check if Gumroad is loaded
     if (isGumroadLoaded && window.GumroadOverlay) {
-      const overlayOptions = {
-        wanted: true
-      };
-      
-      // Add user email if available
-      if (session?.user?.email) {
-        overlayOptions['email'] = session.user.email;
-      }
-      
+      // Open overlay immediately
       window.GumroadOverlay.show(productId, overlayOptions);
     } else {
-      console.warn('Gumroad overlay not yet loaded');
+      // Queue the request and show loading state
+      setIsWaitingForGumroad(true);
+      setPendingOverlayRequest({
+        productId,
+        options: overlayOptions
+      });
+      
+      // Safety timeout - if script doesn't load after 5 seconds, redirect to Gumroad directly
+      setTimeout(() => {
+        if (isWaitingForGumroad) {
+          console.warn('Gumroad script load timeout - redirecting instead');
+          window.location.href = `https://gumroad.com/l/${productId}?wanted=true${
+            session?.user?.email ? `&email=${encodeURIComponent(session.user.email)}` : ''
+          }`;
+        }
+      }, 5000);
     }
   };
 
@@ -92,13 +128,14 @@ export default function SubscriptionButton({
       <button
         className={`gumroad-button ${className}`}
         onClick={handleSubscriptionClick}
+        disabled={isWaitingForGumroad}
       >
-        {buttonText}
+        {isWaitingForGumroad ? 'Loading...' : buttonText}
       </button>
       
       <Script
         src="https://gumroad.com/js/gumroad.js"
-        strategy="lazyOnload"
+        strategy="beforeInteractive" // Load earlier in the page lifecycle
         onLoad={() => {
           setIsGumroadLoaded(true);
           console.log('Gumroad script loaded');
