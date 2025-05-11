@@ -102,7 +102,7 @@ export default function Dashboard() {
         </div>
       </div>
       
-      <div className="container mx-auto px-3 sm:px-8">
+      <div className="mx-auto px-3 sm:px-8">
         {/* Navigation Tabs */}
         <div className="mb-6 flex border-b border-gray-400">
           <button 

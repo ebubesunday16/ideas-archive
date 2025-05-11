@@ -1,27 +1,60 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { Lock, ArrowRight, Zap, Star, Sparkles } from 'lucide-react';
+import { Lock, ArrowRight, Zap, Star, Sparkles, Check } from 'lucide-react';
 
-export default function PremiumCTA({ productId = 'ideas' }) {
+export default function PremiumCTA({ 
+  productId = 'ideas',
+  // Optional prop to hide the component for premium users
+  hideForPremium = true
+}) {
   const { data: session } = useSession();
   const isAuthenticated = !!session;
   const [isHovered, setIsHovered] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isPremium, setIsPremium] = useState(false);
+  
+  // Check if user is premium subscriber
+  useEffect(() => {
+    if (session?.user) {
+      checkSubscriptionStatus();
+    } else {
+      setLoading(false);
+    }
+  }, [session]);
+
+  // Check subscription status
+  const checkSubscriptionStatus = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/check-subscription');
+      const data = await response.json();
+      
+      setIsPremium(data.subscribed);
+    } catch (error) {
+      console.error('Failed to check subscription:', error);
+      setIsPremium(false);
+    } finally {
+      setLoading(false);
+    }
+  };
   
   // Gumroad script loading
-  useState(() => {
-    if (typeof window !== 'undefined') {
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !isPremium) {
       const script = document.createElement('script');
       script.src = 'https://gumroad.com/js/gumroad.js';
       script.async = true;
       document.body.appendChild(script);
       
       return () => {
-        document.body.removeChild(script);
+        if (document.body.contains(script)) {
+          document.body.removeChild(script);
+        }
       };
     }
-  }, []);
+  }, [isPremium]);
 
   // Build the Gumroad URL with query parameters
   const gumroadUrl = `https://outgenerate.gumroad.com/l/${productId}?wanted=true${
@@ -39,6 +72,52 @@ export default function PremiumCTA({ productId = 'ideas' }) {
     // Gumroad's script will intercept it and show the overlay
   };
   
+  // If loading, show loading state
+  if (loading) {
+    return (
+      <div className="border-2 border-gray-800 bg-gray-50 p-6">
+        <div className="animate-pulse flex flex-col items-center justify-center">
+          <div className="h-6 bg-gray-300 w-3/4 mb-4 rounded"></div>
+          <div className="h-4 bg-gray-300 w-1/2 mb-2 rounded"></div>
+          <div className="h-4 bg-gray-300 w-2/3 rounded"></div>
+        </div>
+      </div>
+    );
+  }
+  
+  // If user is premium and we want to hide for premium users, return null
+  if (isPremium && hideForPremium) {
+    return null;
+  }
+  
+  // If user is premium but we want to show something (hideForPremium = false)
+  if (isPremium) {
+    return (
+      <div className="border-2 border-green-600 bg-green-50 overflow-hidden">
+        <div className="bg-green-600 px-3 sm:px-8 py-3 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Check className="h-4 w-4 text-white" />
+            <span className="text-white font-mono text-sm font-bold">
+              PREMIUM ACTIVE
+            </span>
+          </div>
+          <div className="bg-green-700 px-2 py-1 text-xs text-green-100 font-mono">
+            SUBSCRIBED
+          </div>
+        </div>
+        <div className="p-4 text-center">
+          <p className="font-mono text-sm mb-1">
+            You have full access to all premium features.
+          </p>
+          <p className="font-mono text-xs text-gray-500">
+            Thank you for your support!
+          </p>
+        </div>
+      </div>
+    );
+  }
+  
+  // Standard CTA for non-premium users
   return (
     <div className="border-2 border-gray-800 bg-gray-50 overflow-hidden relative">
       {/* Premium badge corner ribbon */}
@@ -64,11 +143,11 @@ export default function PremiumCTA({ productId = 'ideas' }) {
       {/* Main content */}
       <div className="p-5">
         <h2 className="font-mono text-xl font-bold mb-3 text-center">
-          BECOME AN EXCLUSIVE MEMBER
+          SUPERCHARGE YOUR IDEA GENERATION
         </h2>
         
         <p className="font-mono text-sm text-center mb-5">
-          Get unlimited access to our idea archive, updates, and be a supporter to this journey.
+          Get unlimited access to our premium idea archive and exclusive tools
         </p>
         
         {/* Features grid */}
@@ -76,10 +155,10 @@ export default function PremiumCTA({ productId = 'ideas' }) {
           <div className="border border-gray-300 p-3">
             <div className="flex items-center gap-2 mb-2">
               <Zap className="h-5 w-5 text-yellow-500" />
-              <span className="font-mono font-bold">UNLIMITED IDEAS</span>
+              <span className="font-mono font-bold"> SUPPORT</span>
             </div>
             <p className="font-mono text-xs text-gray-600">
-              Get firsthand update to ideas as they pop up everyday.
+            Outgenerate is managed by users who pay. Support our effort by being a subscriber.
             </p>
           </div>
           
@@ -96,16 +175,15 @@ export default function PremiumCTA({ productId = 'ideas' }) {
           <div className="border border-gray-300 p-3">
             <div className="flex items-center gap-2 mb-2">
               <Sparkles className="h-5 w-5 text-yellow-500" />
-              <span className="font-mono font-bold">SUPPORT</span>
+              <span className="font-mono font-bold">WEEKLY UPDATES</span>
             </div>
             <p className="font-mono text-xs text-gray-600">
-              Outgenerate is managed by users who pay. Support our effort by being a subscriber.
+              Get 5-10 fresh market opportunities every week
             </p>
           </div>
           
           
         </div>
-        
         
         
         {/* Action button */}
@@ -124,23 +202,12 @@ export default function PremiumCTA({ productId = 'ideas' }) {
         
         {/* Price info */}
         <p className="text-center font-mono text-xs text-gray-500">
-          Only $9.99/month • Cancel anytime • 30-day money back guarantee
+        Only $9.99/month • Cancel anytime • 30-day money back guarantee
         </p>
       </div>
       
-      {/* Footer */}
-      <div className="bg-gray-200 px-4 py-3 border-t border-gray-300">
-        <div className="flex justify-between items-center">
-          <p className="font-mono text-xs">
-            <span className="text-gray-500">Users: </span>
-            <span className="font-bold">400+</span>
-          </p>
-          <p className="font-mono text-xs">
-            <span className="text-gray-500">Success rate: </span>
-            <span className="font-bold">87%</span>
-          </p>
-        </div>
-      </div>
+      
+      
     </div>
   );
 }
