@@ -128,7 +128,7 @@ export default function PremiumCTA({
       </div>
       
       {/* Header bar */}
-      <div className="bg-gray-800 px-4 py-3 flex justify-between items-center">
+      <div className="bg-gray-800 px-3 sm:px-8 py-3 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Lock className="h-4 w-4 text-yellow-400" />
           <span className="text-white font-mono text-sm font-bold">
@@ -141,27 +141,21 @@ export default function PremiumCTA({
       </div>
       
       {/* Main content */}
-      <div className="p-5">
-        <h2 className="font-mono text-xl font-bold mb-3 text-center">
-          SUPERCHARGE YOUR IDEA GENERATION
-        </h2>
-        
-        <p className="font-mono text-sm text-center mb-5">
-          Get unlimited access to our premium idea archive and exclusive tools
-        </p>
-        
+      <div className="py-5 px-3 sm:px-8">
         {/* Features grid */}
         <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="border border-gray-300 p-3">
+          
+          
+        <div className="border border-gray-300 p-3">
             <div className="flex items-center gap-2 mb-2">
               <Zap className="h-5 w-5 text-yellow-500" />
-              <span className="font-mono font-bold"> SUPPORT</span>
+              <span className="font-mono font-bold"> UNLIMITED IDEAS</span>
             </div>
             <p className="font-mono text-xs text-gray-600">
-            Outgenerate is managed by users who pay. Support our effort by being a subscriber.
+            Get unlimited access to our premium idea archive and exclusive tools.
             </p>
           </div>
-          
+
           <div className="border border-gray-300 p-3">
             <div className="flex items-center gap-2 mb-2">
               <Star className="h-5 w-5 text-yellow-500" />
@@ -179,6 +173,15 @@ export default function PremiumCTA({
             </div>
             <p className="font-mono text-xs text-gray-600">
               Get 5-10 fresh market opportunities every week
+            </p>
+          </div>
+          <div className="border border-gray-300 p-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Zap className="h-5 w-5 text-yellow-500" />
+              <span className="font-mono font-bold"> SUPPORT</span>
+            </div>
+            <p className="font-mono text-xs text-gray-600">
+            Outgenerate is managed by users who pay. Support our by being a subscriber.
             </p>
           </div>
           
