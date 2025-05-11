@@ -22,7 +22,7 @@ export default function ProductCard({
     switch(competition.toLowerCase()) {
       case 'low':
         return (
-          <div className="flex items-center gap-1 bg-green-100 text-green-800 px-2 py-1 text-xs rounded-sm">
+          <div className="flex items-center gap-1 bg-green-100 text-green-800 px-2 py-1 text-xs rounded-sm  ">
             <Zap className="h-3 w-3" />
             <span>Low</span>
           </div>

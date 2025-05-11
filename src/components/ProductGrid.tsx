@@ -10,31 +10,28 @@ import SignupOverlay from "./SignupOverlay";
 export default function ProductGrid() {
   const { data: session, status } = useSession();
   
-  // Initial visible items count
   const initialVisibleCount = 10;
   const incrementAmount = 10;
   
-  // Maximum number of ideas to load based on auth status
+  
   const maxIdeas = session ? 100 : 10;
   
-  // State to track how many ideas are currently displayed
+  
   const [visibleCount, setVisibleCount] = useState(initialVisibleCount);
   
-  // Fetch ideas with limit
+  
   const { ideas: products, loading, error, totalCount } = useIdeasData({
     searchTerm: '', 
     limit: maxIdeas
   });
   
-  // Function to handle loading more ideas
+  
   const handleLoadMore = () => {
     setVisibleCount(prevCount => Math.min(prevCount + incrementAmount, products?.length || 0));
   };
   
-  // Currently visible products
   const visibleProducts = products?.slice(0, visibleCount);
   
-  // Check if we have more products to load
   const hasMoreToLoad = products?.length > visibleCount;
   
   return (
@@ -47,7 +44,7 @@ export default function ProductGrid() {
           </div>
           <div className="p-4 text-center">
             <p className="font-mono text-sm leading-relaxed max-w-3xl mx-auto">
-              We live by digging through trends, analyzing markets, and brainstorming so you don't have to stress about coming up with the next big idea. This Archive is updated every week.
+              We live by digging through trends, analyzing markets, and brainstorming so you don't have to stress about coming up with the next big idea. This Archive is updated every day.
             </p>
           </div>
         </div>
@@ -84,7 +81,7 @@ export default function ProductGrid() {
           <div className="relative">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {visibleProducts.map((product, index) => {
-                const BlurItem = index > 4 ? `${!session && "blur-sm"}` : "";
+                const BlurItem = index > 4 ? `${!session && "blur-sm pointer-events-none"}` : "";
                 
                 return (
                   <ProductCard

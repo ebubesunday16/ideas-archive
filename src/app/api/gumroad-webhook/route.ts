@@ -1,134 +1,91 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from "@/lib/supabaseClient";
-import crypto from 'crypto';
-
-// Gumroad webhook verification function
-function verifyWebhookSignature(
-  payload: string,
-  signature: string,
-  secret: string
-): boolean {
-  try {
-    const hmac = crypto.createHmac('sha256', secret);
-    hmac.update(payload);
-    const digest = hmac.digest('hex');
-    
-    // Safe comparison of two strings
-    return crypto.timingSafeEqual(
       Buffer.from(digest),
-      Buffer.from(signature)
-    );
-  } catch (error) {
-    console.error("Signature verification error:", error);
-    return false;
-  }
-}
 
 export async function POST(req: NextRequest) {
   try {
-    // Get raw body for signature verification
-    const rawBody = await req.text();
-    console.log("Received webhook payload:", rawBody);
-
-    // Parse the webhook payload
-    const payload = JSON.parse(rawBody);
+    // Gumroad sends data as form-urlencoded
+    const formData = await req.formData();
     
-    // Get signature from headers
-    const signature = req.headers.get('X-Gumroad-Signature');
+    // Convert FormData to a regular object
+    const payload: Record<string, any> = {};
+    formData.forEach((value, key) => {
+      // Try to parse nested objects (like url_params, variants, custom_fields)
+      if (key === 'url_params' || key === 'variants' || key === 'custom_fields' || key === 'shipping_information') {
+        try {
+          payload[key] = JSON.parse(value as string);
+        } catch (e) {
+          payload[key] = value;
+        }
+      } else {
+        payload[key] = value;
+      }
+    });
     
-    // In production, always verify the signature
-    if (process.env.NODE_ENV === 'production') {
-      if (!signature || !process.env.GUMROAD_WEBHOOK_SECRET) {
-        console.error("Missing signature or webhook secret");
-        return NextResponse.json({ error: 'Invalid request' }, { status: 403 });
-      }
-      
-      if (!verifyWebhookSignature(rawBody, signature, process.env.GUMROAD_WEBHOOK_SECRET)) {
-        console.error("Invalid webhook signature");
-        return NextResponse.json({ error: 'Invalid signature' }, { status: 403 });
-      }
+    console.log('Received Gumroad ping:', payload);
+    
+    // Extract key information from the payload
+    const {
+      sale_id,
+      product_id,
+      email,
+      price, // in cents
+      recurrence,
+      refunded,
+      subscription_id,
+      test
+    } = payload;
+    
+    // Skip test purchases if configured to do so
+    if (test === 'true' && process.env.IGNORE_TEST_PURCHASES === 'true') {
+      return NextResponse.json({ success: true, message: 'Test purchase ignored' });
     }
-
-    // Handle different webhook events
-    const eventName = payload.event;
-    console.log("Processing event:", eventName);
-
-    if (!payload.purchaser_email) {
-      console.error("Missing purchaser email in webhook payload");
-      return NextResponse.json({ error: 'Missing purchaser email' }, { status: 400 });
-    }
-
+    
     // Get user from email
     const { data: userData, error: userError } = await supabase
       .from('users')
       .select('id')
-      .eq('email', payload.purchaser_email)
+      .eq('email', email)
       .single();
     
     if (userError || !userData) {
-      console.error('User not found:', payload.purchaser_email, userError);
+      console.error('User not found:', email);
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
     
     const userId = userData.id;
-    console.log("Found user ID:", userId);
-
-    if (eventName === 'sale') {
-      // Handle one-time purchases if needed
-      console.log("Processing sale event");
-      
-      // Here you can add logic for one-time purchases if needed
-      
-    } else if (eventName === 'subscription_created' || eventName === 'subscription_updated') {
-      console.log("Processing subscription event:", eventName);
-      
-      const {
-        subscription_id,
-        product_id,
-        product_name,
-        price_cents,
-        recurrence,
-        cancelled_at,
-        ended_at,
-      } = payload;
-      
-      // Calculate end date based on recurrence
-      let periodEndDate;
-      const now = new Date();
-      
-      if (recurrence === 'monthly') {
-        periodEndDate = new Date(now.setMonth(now.getMonth() + 1));
-      } else if (recurrence === 'yearly') {
-        periodEndDate = new Date(now.setFullYear(now.getFullYear() + 1));
-      } else {
-        // Default to 30 days for unknown recurrence
-        periodEndDate = new Date(now.setDate(now.getDate() + 30));
-      }
-      
-      // Determine subscription status
-      const status = (cancelled_at || ended_at) ? 'inactive' : 'active';
-      
+    
+    // Determine subscription status
+    const status = refunded === 'true' ? 'inactive' : 'active';
+    
+    // Handle subscription
+    if (subscription_id) {
       // Check if subscription already exists
-      const { data: existingSub, error: lookupError } = await supabase
+      const { data: existingSub } = await supabase
         .from('subscriptions')
         .select('id')
         .eq('subscription_id', subscription_id)
-        .maybeSingle();
+        .single();
       
-      if (lookupError) {
-        console.error('Error looking up subscription:', lookupError);
+      // Calculate next billing date (30 days for monthly, 365 for yearly by default)
+      let daysUntilRenewal = 30;
+      if (recurrence === 'yearly') {
+        daysUntilRenewal = 365;
+      } else if (recurrence === 'quarterly') {
+        daysUntilRenewal = 90;
       }
       
+      const nextBillingDate = new Date();
+      nextBillingDate.setDate(nextBillingDate.getDate() + daysUntilRenewal);
+      
       if (existingSub) {
-        console.log("Updating existing subscription:", subscription_id);
         // Update existing subscription
         const { error } = await supabase
           .from('subscriptions')
           .update({
             status,
-            current_period_end: periodEndDate,
-            cancel_at_period_end: !!cancelled_at,
-            updated_at: new Date()
+            current_period_end: nextBillingDate,
+            cancel_at_period_end: refunded === 'true',
           })
           .eq('subscription_id', subscription_id);
         
@@ -137,7 +94,6 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ error: 'Database error' }, { status: 500 });
         }
       } else {
-        console.log("Creating new subscription for user:", userId);
         // Create new subscription
         const { error } = await supabase
           .from('subscriptions')
@@ -145,14 +101,10 @@ export async function POST(req: NextRequest) {
             user_id: userId,
             subscription_id,
             product_id,
-            product_name: product_name || 'Premium Subscription',
             status,
             plan_type: recurrence || 'one_time',
-            price_cents: price_cents || 0,
-            current_period_end: periodEndDate,
-            cancel_at_period_end: !!cancelled_at,
-            created_at: new Date(),
-            updated_at: new Date()
+            current_period_end: nextBillingDate,
+            cancel_at_period_end: refunded === 'true',
           });
         
         if (error) {
@@ -160,32 +112,24 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ error: 'Database error' }, { status: 500 });
         }
       }
-    } else if (eventName === 'subscription_cancelled') {
-      console.log("Processing subscription cancellation");
-      
-      const { subscription_id } = payload;
-      
-      if (!subscription_id) {
-        console.error("Missing subscription_id in cancellation event");
-        return NextResponse.json({ error: 'Missing subscription ID' }, { status: 400 });
-      }
-      
-      // Update subscription status
+    } else {
+      // Handle one-time purchase
       const { error } = await supabase
         .from('subscriptions')
-        .update({ 
-          status: 'inactive',
-          cancel_at_period_end: true,
-          updated_at: new Date()
-        })
-        .eq('subscription_id', subscription_id);
+        .insert({
+          user_id: userId,
+          subscription_id: sale_id, // Use sale_id as a unique identifier
+          product_id,
+          status,
+          plan_type: 'one_time',
+          current_period_end: new Date(2099, 11, 31), // Far future date for one-time purchases
+          cancel_at_period_end: false,
+        });
       
       if (error) {
-        console.error('Error updating subscription status:', error);
+        console.error('Error recording one-time purchase:', error);
         return NextResponse.json({ error: 'Database error' }, { status: 500 });
       }
-    } else {
-      console.log("Unhandled event type:", eventName);
     }
     
     return NextResponse.json({ success: true });
