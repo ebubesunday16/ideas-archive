@@ -98,6 +98,7 @@ export default function SubscriptionButton({
   }`;
 
   return (
+    <a
     
       className={`gumroad-button ${className}`}
       href={gumroadUrl}
