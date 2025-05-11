@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
-import Script from 'next/script';
 
 interface SubscriptionButtonProps {
   productId: string;
@@ -19,14 +18,7 @@ export default function SubscriptionButton({
   const [loading, setLoading] = useState(true);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscriptionData, setSubscriptionData] = useState<any>(null);
-  const [isGumroadLoaded, setIsGumroadLoaded] = useState(false);
-  const [isWaitingForGumroad, setIsWaitingForGumroad] = useState(false);
-  
-  // Store click details for delayed execution
-  const [pendingOverlayRequest, setPendingOverlayRequest] = useState<null | {
-    productId: string;
-    options: any;
-  }>(null);
+  const gumroadScriptRef = useRef<HTMLScriptElement | null>(null);
 
   // Check if user is already subscribed
   useEffect(() => {
@@ -37,18 +29,27 @@ export default function SubscriptionButton({
     }
   }, [session]);
 
-  // Effect to handle pending overlay requests when script loads
+  // Manual script loading for Gumroad
   useEffect(() => {
-    if (isGumroadLoaded && pendingOverlayRequest && window.GumroadOverlay) {
-      // Execute the pending request
-      window.GumroadOverlay.show(
-        pendingOverlayRequest.productId,
-        pendingOverlayRequest.options
-      );
-      setPendingOverlayRequest(null);
-      setIsWaitingForGumroad(false);
+    if (!gumroadScriptRef.current && typeof window !== 'undefined') {
+      const script = document.createElement('script');
+      script.src = 'https://gumroad.com/js/gumroad.js';
+      script.async = true;
+      script.onload = () => {
+        console.log('Gumroad script loaded successfully');
+      };
+      
+      document.body.appendChild(script);
+      gumroadScriptRef.current = script;
     }
-  }, [isGumroadLoaded, pendingOverlayRequest]);
+    
+    // Cleanup function
+    return () => {
+      if (gumroadScriptRef.current && document.body.contains(gumroadScriptRef.current)) {
+        document.body.removeChild(gumroadScriptRef.current);
+      }
+    };
+  }, []);
 
   const checkSubscriptionStatus = async () => {
     try {
@@ -65,47 +66,15 @@ export default function SubscriptionButton({
     }
   };
 
-  // Function to handle the button click
+  // Function to handle the button click for non-authenticated users
   const handleSubscriptionClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    
     if (!session?.user) {
+      e.preventDefault();
       // Redirect to sign in page first
       window.location.href = `/api/auth/signin?callbackUrl=${encodeURIComponent(window.location.href)}`;
-      return;
     }
-    
-    const overlayOptions = {
-      wanted: true
-    };
-    
-    // Add user email if available
-    if (session?.user?.email) {
-      overlayOptions['email'] = session.user.email;
-    }
-    
-    // Check if Gumroad is loaded
-    if (isGumroadLoaded && window.GumroadOverlay) {
-      // Open overlay immediately
-      window.GumroadOverlay.show(productId, overlayOptions);
-    } else {
-      // Queue the request and show loading state
-      setIsWaitingForGumroad(true);
-      setPendingOverlayRequest({
-        productId,
-        options: overlayOptions
-      });
-      
-      // Safety timeout - if script doesn't load after 5 seconds, redirect to Gumroad directly
-      setTimeout(() => {
-        if (isWaitingForGumroad) {
-          console.warn('Gumroad script load timeout - redirecting instead');
-          window.location.href = `https://gumroad.com/l/${productId}?wanted=true${
-            session?.user?.email ? `&email=${encodeURIComponent(session.user.email)}` : ''
-          }`;
-        }
-      }, 5000);
-    }
+    // For authenticated users, let the default link behavior work
+    // Gumroad's script will intercept it and show the overlay
   };
 
   if (loading) {
@@ -123,24 +92,18 @@ export default function SubscriptionButton({
     );
   }
 
+  // Build the Gumroad URL with query parameters
+  const gumroadUrl = `https://outgenerate.gumroad.com/l/${productId}?wanted=true${
+    session?.user?.email ? `&email=${encodeURIComponent(session.user.email)}` : ''
+  }`;
+
   return (
-    <>
-      <button
-        className={`gumroad-button ${className}`}
-        onClick={handleSubscriptionClick}
-        disabled={isWaitingForGumroad}
-      >
-        {isWaitingForGumroad ? 'Loading...' : buttonText}
-      </button>
-      
-      <Script
-        src="https://gumroad.com/js/gumroad.js"
-        strategy="beforeInteractive" // Load earlier in the page lifecycle
-        onLoad={() => {
-          setIsGumroadLoaded(true);
-          console.log('Gumroad script loaded');
-        }}
-      />
-    </>
+    
+      className={`gumroad-button ${className}`}
+      href={gumroadUrl}
+      onClick={handleSubscriptionClick}
+    >
+      {buttonText}
+    </a>
   );
 }
