@@ -221,7 +221,7 @@ const Page = () => {
         
         <p className="text-gray-600">For businesses, startups, SAAS, blogs and indie hackers</p>
 
-        {/* NEW: Animated Counters Instead of Static Metrics */}
+        
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-3xl border-t border-black border-b py-8 mt-12">
           <AnimatedCounter value="100+" label="Ideas Generated" icon="🔍" />
           <AnimatedCounter value="78%" label="Success Rate" icon="🏆" />
