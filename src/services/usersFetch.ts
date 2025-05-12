@@ -51,7 +51,7 @@ export async function getSavedIdeas() {
   const savedIdsArray = JSON.parse(savedIdeasStr);
 
   try {
-    const { ideas: resolvedIdeas = [], error } = await getIdeasServerSide();
+    const { ideas: resolvedIdeas = [], error } = await getIdeasServerSide({});
 
     if (error) {
       console.error('Error fetching ideas:', error);
