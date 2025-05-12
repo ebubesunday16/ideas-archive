@@ -1,11 +1,11 @@
 'use client'
-import ThemeButton from "@/components/ThemeButton";
-import { CheckCircle, Group4, RocketLaunch, XCircle } from "@/assets/svgs";
+import { CheckCircle, XCircle } from "@/assets/svgs";
 import Image from "next/image";
 import { useState } from "react";
-import AnimatedCounter from "./componets/AnimatedCounter";
-import ProcessStep from "./componets/ProcessStep";
-import ProductSamplePreview from "./componets/Sample";
+import AnimatedCounter from "./components/AnimatedCounter";
+import OrderButton from "./components/Button";
+import ProcessStep from "./components/ProcessStep";
+import ProductSamplePreview from "./components/Sample";
 
 // Testimonial Card Component
 const TestimonialCard = ({ quote, author, company }) => {
@@ -13,7 +13,6 @@ const TestimonialCard = ({ quote, author, company }) => {
     <div className="bg-gray-50 rounded-[16px] border p-6 space-y-4 hover:shadow-md transition-shadow duration-300">
       <p className="text-sm italic">"{quote}"</p>
       <div className="flex items-center space-x-2">
-        <div className="h-8 w-8 rounded-full bg-gray-300"></div>
         <div>
           <p className="font-semibold text-sm">{author}</p>
           <p className="text-xs text-gray-600">{company}</p>
@@ -49,11 +48,11 @@ const FAQItem = ({ question, answer }) => {
 // Pricing Component
 const PricingCard = () => {
   return (
-    <div className="border rounded-[16px] overflow-hidden hover:shadow-lg transition-shadow duration-300">
+    <div className="border border-black rounded-[16px] overflow-hidden hover:shadow-lg transition-shadow duration-300">
       <div className="bg-gray-50 py-6 px-3 sm:px-6 text-center border-b">
         <h3 className="font-bold">Product Idea Package</h3>
         <div className="mt-4 mb-2">
-          <span className="text-3xl font-bold">$200</span>
+          <span className="text-3xl font-bold">$199</span>
           <span className="text-gray-500 ml-2">one-time</span>
         </div>
         <p className="text-gray-600 text-xs">No recurring fees, no hidden charges</p>
@@ -80,44 +79,21 @@ const PricingCard = () => {
         </ul>
         
         <div className="mt-8">
-          <ThemeButton className="bg-white w-full py-3 relative overflow-hidden group">
-            <span className="relative z-10 flex items-center justify-center">
-              GET STARTED NOW <RocketLaunch className="ml-2 inline-block group-hover:translate-x-1 transition-transform duration-200"/>
-            </span>
-            <span className="absolute inset-0 bg-gradient-to-r from-blue-50 to-blue-100 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
-          </ThemeButton>
-          <p className="text-xs text-center text-gray-500 mt-4">14-day money-back guarantee</p>
+          <OrderButton className="w-full">
+            GET STARTED NOW
+          </OrderButton>
+          <p className="text-xs text-center text-gray-500 mt-4">14-day money-back guarantee. Hurry now as this price maybe updated with time.</p>
         </div>
       </div>
     </div>
   );
 };
 
-// Newsletter Signup Component
-const NewsletterSignup = () => {
-  return (
-    <div className="bg-gray-100 rounded-[16px] p-6 space-y-4 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full -translate-x-12 -translate-y-16 opacity-50"></div>
-      <h3 className="font-semibold relative z-10">Stay updated with new opportunities</h3>
-      <div className="flex flex-col sm:flex-row gap-2 relative z-10">
-        <input 
-          type="email" 
-          placeholder="Your email" 
-          className="px-4 py-2 rounded border flex-1 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all duration-200"
-        />
-        <ThemeButton className="bg-white hover:bg-blue-50 transition-colors duration-200">
-          Subscribe
-        </ThemeButton>
-      </div>
-      <p className="text-xs text-gray-600 relative z-10">We'll send you product ideas and tips. No spam.</p>
-    </div>
-  );
-};
 
 // Feature Card Component
 const FeatureCard = ({ icon, title, description }) => {
   return (
-    <div className="p-6 border rounded-[16px] space-y-3 hover:shadow-md transition-shadow duration-300 hover:translate-y-[-5px] transition-all duration-300">
+    <div className="p-6 border border-black rounded-[16px] space-y-3 hover:shadow-md transition-shadow duration-300 hover:translate-y-[-5px] ">
       <div className="h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center text-xl">
         {icon}
       </div>
@@ -146,9 +122,9 @@ const CTABanner = () => {
       
       <h2 className="text-2xl font-bold relative z-10">Ready to find your next product idea?</h2>
       <p className="relative z-10">Get 3 validated ideas with proven search demand delivered to your inbox</p>
-      <ThemeButton className="bg-white relative z-10 hover:bg-blue-50 transition-colors duration-200">
-        GET STARTED NOW <RocketLaunch className="ml-2 inline-block"/>
-      </ThemeButton>
+      <OrderButton >
+        GET STARTED NOW 
+      </OrderButton>
     </div>
   );
 };
@@ -197,14 +173,9 @@ const Page = () => {
           </div>
         </div>
         
-        <Group4 />
+        {/* <Group4 /> */}
         
-        <ThemeButton className="bg-white group relative overflow-hidden">
-          <span className="relative z-10 flex items-center justify-center">
-            GET YOUR OWN PRODUCT IDEAS <RocketLaunch className="ml-2 inline-block group-hover:translate-x-1 transition-transform duration-200"/>
-          </span>
-          <span className="absolute inset-0 bg-gradient-to-r from-blue-50 to-blue-100 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
-        </ThemeButton>
+        <OrderButton>GET YOUR OWN PRODUCT IDEAS </OrderButton>
       </section>
 
       <section className="flex flex-col items-center space-y-8 text-center">
@@ -235,8 +206,8 @@ const Page = () => {
           />
         </div>
         
-        <div className="relative mt-12 group">
-          <div className="absolute -inset-1 bg-gradient-to-r from-blue-100 to-green-100 rounded-lg blur opacity-30 group-hover:opacity-60 transition duration-300"></div>
+        <div className=" mt-12 group">
+          
           <div className="relative">
             <Image 
               src={'/Group7.png'}
@@ -251,9 +222,9 @@ const Page = () => {
         <p className="text-gray-600">For businesses, startups, SAAS, blogs and indie hackers</p>
 
         {/* NEW: Animated Counters Instead of Static Metrics */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-3xl border-t border-b py-8 mt-12">
-          <AnimatedCounter value="500+" label="Ideas Generated" icon="🔍" />
-          <AnimatedCounter value="93%" label="Success Rate" icon="🏆" />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-3xl border-t border-black border-b py-8 mt-12">
+          <AnimatedCounter value="100+" label="Ideas Generated" icon="🔍" />
+          <AnimatedCounter value="78%" label="Success Rate" icon="🏆" />
           <AnimatedCounter value="14 Days" label="Avg. Time to Launch" icon="🚀" />
         </div>
       </section>
@@ -282,26 +253,26 @@ const Page = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
           <TestimonialCard 
-            quote="The product idea I received led to my most successful launch ever. The market analysis was spot-on."
-            author="Alex Morgan"
-            company="Founder, TechSprint"
+            quote="Anything Emmanuel Sunday is involved in, I’m in. I learned so much from the one time I worked with you—it was my biggest leap ever."
+            author="Eso"
+            company="Blogger, Teki360"
           />
           <TestimonialCard 
-            quote="I was skeptical at first, but the ideas were truly underserved opportunities. Saved me months of research."
+            quote="You can tell he knows what he does. I'm confident something good is coming out of this!"
             author="Sarah Chen"
             company="Solo Developer"
           />
           <TestimonialCard 
-            quote="I've tried 2 of the 3 ideas and both have gained significant traction within weeks."
-            author="Michael Rodriguez"
-            company="CEO, BuildFast"
+            quote="I once tried your stuff that you share on your newsletter and gained significant traction within weeks. I'm currently doing over 20k monthly in traffic."
+            author="David Chukwuma"
+            company="CEO, DAJAC"
           />
         </div>
       </section>
 
-      <section className="relative mb-176">
-        <div className="border-y absolute left-1/2 -translate-x-1/2 w-screen">
-          <div className="border-x px-3 sm:px-8 md:px-16 py-24 space-y-8 max-w-[936px] mx-auto">
+      <section className="border-y border-black ">
+        <div className="w-full ">
+          <div className="px-3 sm:px-8 md:px-16 py-24 space-y-8 max-w-[936px] mx-auto">
              <h2 className="text-3xl sm:text-4xl font-bold text-center"> All you have to do is build </h2>
              <div className="flex flex-col sm:flex-row flex-wrap gap-4">
                 <div className="rounded-[16px] border-[#D40707] bg-[#D9D9D9] border py-4 px-6 min-w-[280px] flex-1 space-y-3 hover:shadow-md transition-shadow duration-300">
@@ -310,10 +281,10 @@ const Page = () => {
                       <XCircle className="" />
                    </div>
                    <ul className="list-disc text-sm pl-6 space-y-4">
-                      <li>Don't know what to build</li>
-                      <li>Stuck in the idea abyss</li>
-                      <li>Ambiguous product ideas</li>
-                      <li>Unproven market demand</li>
+                      <li>Don't know what to build.</li>
+                      <li>Stuck in the idea abyss.</li>
+                      <li>Ambiguous product ideas.</li>
+                      <li>Unproven market demand.</li>
                    </ul>
                 </div>
                 <div className="rounded-[16px] border-[#26A967] bg-[#C9F0DD]/30 border py-4 px-6 min-w-[280px] flex-1 space-y-3 hover:shadow-md transition-shadow duration-300">
@@ -322,10 +293,10 @@ const Page = () => {
                       <CheckCircle className="" />
                    </div>
                    <ul className="list-disc text-sm pl-6 space-y-4">
-                      <li>Get a roadmap on what exactly needs you</li>
-                      <li>Clarity is peace with proper mapping</li>
-                      <li>Build tools with search demand</li>
-                      <li>Stop thinking about conventional marketing</li>
+                      <li>Get a roadmap on what exactly needs you.</li>
+                      <li>Clarity is peace with proper mapping.</li>
+                      <li>Build tools with search demand.</li>
+                      <li>Stop thinking about conventional marketing.</li>
                    </ul>
                 </div>
              </div>
@@ -334,12 +305,12 @@ const Page = () => {
       </section>
       
       {/* Pricing and FAQ Section - Side by Side on Desktop */}
-      <section className="max-w-5xl mx-auto">
-        <span className="inline-block px-4 py-1 bg-blue-50 rounded-full text-blue-700 text-sm font-medium mb-4 mx-auto block text-center">
+      <section className="">
+        <span className="inline-block px-4 py-1 bg-blue-50 rounded-full text-blue-700 text-sm font-medium mb-4 mx-auto  text-center">
           Investment
         </span>
         <h2 className="text-3xl font-bold mb-8 text-center">Pricing</h2>
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-12 h-screen items-center">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-12  items-center">
           {/* Pricing Column */}
           <div>
             <PricingCard />
@@ -351,7 +322,7 @@ const Page = () => {
             <div className="space-y-2">
               <FAQItem 
                 question="How are the product ideas selected?" 
-                answer="We use a combination of search volume analysis, competition assessment, and market trend evaluation to identify truly underserved opportunities with proven demand."
+                answer="We use a combination of search volume analysis, competition assessment, market trend evaluation, and years of experience doing SEO, to identify truly underserved opportunities with proven demand."
               />
               <FAQItem 
                 question="What do I receive exactly?" 
@@ -362,16 +333,17 @@ const Page = () => {
                 answer="You'll receive your ideas within 3-5 business days after your order is confirmed."
               />
               <FAQItem 
-                question="Do you offer refunds?" 
-                answer="Yes, if you're not satisfied with the quality of ideas received, we offer a 14-day money-back guarantee."
+                question="How does this work?" 
+                answer="After making your payment, you’ll receive a confirmation email verifying your purchase. Shortly after, you'll get another email asking for any necessary information to help us understand your needs and find ideas that best suits you."
               />
+              
             </div>
           </div>
         </div>
       </section>
       
       {/* Features Section */}
-      <section className="flex flex-col items-center space-y-8 max-w-4xl mx-auto">
+      <section className="flex flex-col items-center space-y-8 ">
         <span className="inline-block px-4 py-1 bg-blue-50 rounded-full text-blue-700 text-sm font-medium">
           Features
         </span>
@@ -399,11 +371,7 @@ const Page = () => {
             title="Keyword Strategy" 
             description="Ready-to-use keyword plan to dominate search results"
           />
-          <FeatureCard 
-            icon="🚀" 
-            title="Launch Timeline" 
-            description="Suggested schedule for optimal market entry"
-          />
+          
           <FeatureCard 
             icon="📱" 
             title="Platform Advice" 
@@ -412,13 +380,10 @@ const Page = () => {
         </div>
       </section>
       
-      {/* Newsletter Section */}
-      <section className="max-w-2xl mx-auto">
-        <NewsletterSignup />
-      </section>
+      
       
       {/* Final CTA */}
-      <section className="max-w-4xl mx-auto">
+      <section >
         <CTABanner />
       </section>
     </main>

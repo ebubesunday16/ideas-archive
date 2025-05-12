@@ -66,11 +66,7 @@ const Header = ({className}: {className?: string}) => {
               Get The Perfect Idea
             </div>
           </Link>
-          <Link href="/ideas/dashboard">
-            <div className="block p-2 hover:bg-gray-50 transition-colors duration-200 text-xs  font-medium uppercase border border-gray-300 bg-white">
-              Dashboard
-            </div>
-          </Link>
+          
           <SignInbtn className="block p-2 hover:bg-gray-50 transition-colors duration-200 text-xs  font-medium uppercase border border-gray-300 bg-white" uppercase="uppercase"/>
           
        

@@ -31,11 +31,6 @@ const Footer = ({className}: {className?: string}) => {
               </Link>
             </li>
             <li className="hover:underline">
-              <Link href='/ideas/dashboard'>
-                Dashboard
-              </Link>
-            </li>
-            <li className="hover:underline">
               <Link href='/ideas/order'>
                 Premium
               </Link>
