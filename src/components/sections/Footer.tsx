@@ -10,7 +10,7 @@ const Footer = ({className}: {className?: string}) => {
       <div className="flex flex-col gap-6 justify-between items-start sm:flex-row ">
         <div className=" flex-1 flex flex-col space-y-4">
           <Link href={'/ideas'} className="flex items-center gap-4">
-            <span className="block font-semibold text-sm sm:text-base">OUTGENERATE...</span>
+            <span className="block font-semibold text-sm sm:text-base">OUTGENERATE</span>
             <span className="block font-semibold text-sm sm:text-base bg-[#F6BD41] text-black px-1 rounded-[3px]">
                 Ideas
             </span>
