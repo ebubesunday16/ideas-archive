@@ -201,22 +201,22 @@ const MarketAnalysis = ({ data }: {data: MarketAnalysisType}) => {
     const availableMonths = allMonths.slice(0, currentMonthIndex + 1);
     
     switch (trend?.toLowerCase()) {
-      case "increasing":
+      case "Upward":
         return availableMonths.map((month, index) => ({
           month,
           value: 30 + (index * 10)
         }));
-      case "decreasing":
+      case "Downward":
         return availableMonths.map((month, index) => ({
           month,
           value: 90 - (index * 8)
         }));
-      case "hilly":
+      case "Rapid growth":
         return availableMonths.map((month, index) => ({
           month,
           value: 50 + Math.sin(index * 1.5) * 25
         }));
-      case "flat":
+      case "Steady":
         return availableMonths.map((month, index) => ({
           month,
           value: 50 + (Math.random() * 6 - 3)
@@ -231,13 +231,13 @@ const MarketAnalysis = ({ data }: {data: MarketAnalysisType}) => {
   
   const getChartColor = (trend) => {
     switch (trend?.toLowerCase()) {
-      case "increasing":
+      case "Upward":
         return "#10b981"; // emerald/green
-      case "decreasing":
+      case "Downward":
         return "#ef4444"; // red
-      case "hilly":
+      case "Rapid growth":
         return "#f59e0b"; // amber
-      case "flat":
+      case "Steady":
         return "#6366f1"; // indigo
       default:
         return "#6366f1"; // indigo
@@ -247,13 +247,13 @@ const MarketAnalysis = ({ data }: {data: MarketAnalysisType}) => {
   // Get trend description based on trend
   const getTrendDescription = (trend) => {
     switch (trend?.toLowerCase()) {
-      case "increasing":
+      case "Upward":
         return "Steadily growing market interest";
-      case "decreasing":
+      case "Downward":
         return "Declining market interest over time";
-      case "hilly":
+      case "Rapid growth":
         return "Fluctuating market interest with peaks and valleys";
-      case "flat":
+      case "Steady":
         return "Stable market interest with minimal variation";
       default:
         return "No clear trend available";
@@ -285,7 +285,7 @@ const MarketAnalysis = ({ data }: {data: MarketAnalysisType}) => {
           <div className="grid grid-cols-2 gap-1 mb-2">
             <div className="border border-gray-400">
               <div className="bg-white border-b border-gray-400 p-2 text-xs uppercase font-bold">
-                Monthly Search Volume
+                Monthly Search Volume 
               </div>
               <div className="p-2 text-center">
                 <p className="font-bold">{data.search_volume ?? 'N/A'}</p>
