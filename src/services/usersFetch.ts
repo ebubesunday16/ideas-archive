@@ -33,7 +33,6 @@ export async function saveIdea(ideaId: number) {
 
  
 export async function unsaveIdea(ideaId: number) {
-  if (typeof window === 'undefined') return { error: 'Not in browser context' };
   
   const savedIdeasStr = localStorage.getItem('savedIdeas') || '[]';
   const savedIdeas = JSON.parse(savedIdeasStr);
@@ -46,14 +45,24 @@ export async function unsaveIdea(ideaId: number) {
  
 // Get user's saved ideas
 export async function getSavedIdeas() {
-  if (typeof window === 'undefined') return [];
+  if (typeof window === 'undefined') return []; // Avoid server-side access to localStorage
   
-  const savedIdeasStr = localStorage.getItem('savedIdeas') || '[]';
-  const savedIdsArray  = JSON.parse(savedIdeasStr);
+  const savedIdeasStr = localStorage.getItem('savedIdeas') || '[]'; // Default to '[]' if no saved ideas
+  const savedIdsArray = JSON.parse(savedIdeasStr);
 
-  const {ideas:resolvedIdeas, error} = await getIdeasServerSide()
+  try {
+    const { ideas: resolvedIdeas = [], error } = await getIdeasServerSide();
 
-  const savedIdeas = resolvedIdeas?.filter((item) => savedIdsArray.includes(item.id))
+    if (error) {
+      console.error('Error fetching ideas:', error);
+      return []; // Return empty array if there's an error
+    }
 
-  return savedIdeas
+    const savedIdeas = resolvedIdeas.filter((item) => savedIdsArray.includes(item.id));
+
+    return savedIdeas;
+  } catch (error) {
+    console.error('Error in getSavedIdeas function:', error);
+    return []; // Return empty array if any error occurs
+  }
 }
