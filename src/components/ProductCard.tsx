@@ -15,6 +15,7 @@ export default function ProductCard({
   accent,
   id,
   className,
+  createdAt, // Add createdAt prop to track when the idea was created
 }: {
   title: string, 
   description: string, 
@@ -23,6 +24,7 @@ export default function ProductCard({
   competition: string, 
   id: string, 
   className: string,
+  createdAt?: string, // Optional timestamp for when the idea was created
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -71,6 +73,18 @@ export default function ProductCard({
     }
   };
 
+  // Check if the idea is new (less than a week old)
+  const isNewIdea = () => {
+    if (!createdAt) return false;
+    
+    const createdDate = new Date(createdAt);
+    const currentDate = new Date();
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(currentDate.getDate() - 7);
+    
+    return createdDate > oneWeekAgo;
+  };
+
   const getCompetitionBadge = () => {
     if (!competition) return null;
    
@@ -103,10 +117,17 @@ export default function ProductCard({
  
   return (
     <div
-      className={`overflow-hidden flex flex-col border border-black bg-white hover:shadow-md transition-all duration-300 ${className}`}
+      className={`overflow-hidden flex flex-col border border-black bg-white hover:shadow-md transition-all duration-300 ${className} relative`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* New badge - only appears if the idea is less than a week old */}
+      {isNewIdea() && (
+        <div className="absolute top-0 right-0 bg-blue-500 text-white px-2 py-1 text-xs font-mono font-bold z-10 shadow-sm transform rotate-0 translate-y-0 translate-x-0">
+          NEW
+        </div>
+      )}
+      
       <div
         className="h-1 transition-all duration-300 group-hover:h-2"
         style={{ backgroundColor: accent }}
@@ -142,7 +163,7 @@ export default function ProductCard({
       </div>
      
       <Link href={`/ideas/${id}`} className="flex-1">
-        <div className="p-3  h-full flex flex-col ">
+        <div className="p-3 h-full flex flex-col">
           <div className="mb-3">
             <span
               className="text-xs font-mono px-2 py-1 bg-gray-100 border border-gray-300 inline-block"

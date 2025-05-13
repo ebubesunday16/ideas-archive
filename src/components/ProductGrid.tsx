@@ -7,31 +7,79 @@ import { useState } from "react";
 import ProductCard from "./ProductCard";
 import SignupOverlay from "./SignupOverlay";
 
+// Define filter types
+export const FILTER_TYPES = {
+  ALL: 'ALL',
+  LOW_COMPETITION: 'LOW_COMPETITION',
+  NEWEST: 'NEWEST',
+  OLDEST: 'OLDEST',
+};
+
 export default function ProductGrid() {
   const { data: session, status } = useSession();
   
   const initialVisibleCount = 10;
   const incrementAmount = 10;
-  
-  
   const maxIdeas = session ? 100 : 10;
   
-  
   const [visibleCount, setVisibleCount] = useState(initialVisibleCount);
+  const [activeFilter, setActiveFilter] = useState(FILTER_TYPES.NEWEST);
   
+  // Convert filter type to query options
+  const getQueryOptions = () => {
+    let options = {
+      searchTerm: '',
+      limit: maxIdeas
+    };
+    
+    switch (activeFilter) {
+      case FILTER_TYPES.NEWEST:
+        options = {
+          ...options,
+          orderBy: 'id', // Assuming id is incremental and can be used as a proxy for creation time
+          orderDirection: 'desc'
+        };
+        break;
+      case FILTER_TYPES.OLDEST:
+        options = {
+          ...options,
+          orderBy: 'id', // Assuming id is incremental and can be used as a proxy for creation time
+          orderDirection: 'asc'
+        };
+        break;
+      case FILTER_TYPES.LOW_COMPETITION:
+        // Simplified JSON path access
+        options = {
+          ...options,
+          orderBy: 'id', // Fallback to ID sorting first
+          orderDirection: 'asc'
+        };
+        break;
+      case FILTER_TYPES.ALL:
+      default:
+        options = {
+          ...options,
+          orderBy: 'title',
+          orderDirection: 'asc'
+        };
+        break;
+    }
+    
+    return options;
+  };
   
-  const { ideas: products, loading, error, totalCount } = useIdeasData({
-    searchTerm: '', 
-    limit: maxIdeas
-  });
-  
+  const { ideas: products, loading, error, totalCount, refetch } = useIdeasData(getQueryOptions());
   
   const handleLoadMore = () => {
     setVisibleCount(prevCount => Math.min(prevCount + incrementAmount, products?.length || 0));
   };
   
-  const visibleProducts = products?.slice(0, visibleCount);
+  const handleFilterChange = (filter) => {
+    setActiveFilter(filter);
+    setVisibleCount(initialVisibleCount); // Reset visible count when filter changes
+  };
   
+  const visibleProducts = products?.slice(0, visibleCount);
   const hasMoreToLoad = products?.length > visibleCount;
   
   return (
@@ -51,17 +99,45 @@ export default function ProductGrid() {
         
         <div className="mb-6 flex flex-wrap gap-2 border border-black bg-gray-200 p-3">
           <span className="font-mono text-xs font-bold">FILTER BY:</span>
-          <button className="bg-white text-gray-800 px-3 py-1 text-xs font-mono border border-gray-400 hover:bg-gray-100">
+          <button 
+            className={`px-3 py-1 text-xs font-mono border border-gray-400 hover:bg-gray-100 ${
+              activeFilter === FILTER_TYPES.ALL 
+                ? 'bg-gray-800 text-white' 
+                : 'bg-white text-gray-800'
+            }`}
+            onClick={() => handleFilterChange(FILTER_TYPES.ALL)}
+          >
             ALL IDEAS
           </button>
-          <button className="bg-white text-gray-800 px-3 py-1 text-xs font-mono border border-gray-400 hover:bg-gray-100">
+          <button 
+            className={`px-3 py-1 text-xs font-mono border border-gray-400 hover:bg-gray-100 ${
+              activeFilter === FILTER_TYPES.LOW_COMPETITION 
+                ? 'bg-gray-800 text-white' 
+                : 'bg-white text-gray-800'
+            }`}
+            onClick={() => handleFilterChange(FILTER_TYPES.LOW_COMPETITION)}
+          >
             LOW COMPETITION
           </button>
-          <button className="bg-white text-gray-800 px-3 py-1 text-xs font-mono border border-gray-400 hover:bg-gray-100">
-            TRENDING
-          </button>
-          <button className="bg-white text-gray-800 px-3 py-1 text-xs font-mono border border-gray-400 hover:bg-gray-100">
+          <button 
+            className={`px-3 py-1 text-xs font-mono border border-gray-400 hover:bg-gray-100 ${
+              activeFilter === FILTER_TYPES.NEWEST 
+                ? 'bg-gray-800 text-white' 
+                : 'bg-white text-gray-800'
+            }`}
+            onClick={() => handleFilterChange(FILTER_TYPES.NEWEST)}
+          >
             NEWEST
+          </button>
+          <button 
+            className={`px-3 py-1 text-xs font-mono border border-gray-400 hover:bg-gray-100 ${
+              activeFilter === FILTER_TYPES.OLDEST 
+                ? 'bg-gray-800 text-white' 
+                : 'bg-white text-gray-800'
+            }`}
+            onClick={() => handleFilterChange(FILTER_TYPES.OLDEST)}
+          >
+            OLDEST
           </button>
         </div>
         
@@ -86,13 +162,14 @@ export default function ProductGrid() {
                 return (
                   <ProductCard
                     className={BlurItem}
-                    key={index}
+                    key={product.id}
                     title={product.title}
                     description={product.excerpt}
                     category={product.main_keyword}
                     accent={"#F6BD41"}
                     id={product.id}
                     competition={product?.market_analysis?.competition_level}
+                    createdAt={product.created_at} // Pass the creation date to the ProductCard
                   />
                 );
               })}
