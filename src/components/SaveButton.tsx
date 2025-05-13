@@ -73,31 +73,5 @@ function SaveButton({className, ideaId}: {className: string, ideaId: number}) {
         </button>
     )
 }
-    
-    return (
-        <button
-            className={`flex items-center border border-black text-sm mb-8 px-3 py-1 bg-gray-100 hover:bg-gray-200 transition-colors ${isLoading ? 'opacity-70 cursor-not-allowed' : ''} ${className}`}
-            onClick={handleSave}
-            disabled={isLoading}
-        >
-            {isLoading ? (
-                <span className='flex gap-1 items-center justify-center'>
-                    <span>Processing...</span>
-                    <div className="animate-spin h-4 w-4 border-2 border-black border-t-transparent rounded-full"></div>
-                </span>
-            ) : isSaved ? (
-                <span className='flex gap-1 items-center justify-center'>
-                    <span>Unsave</span>
-                    <BookmarkCheck strokeWidth={1} size={18}/>
-                </span>
-            ) : (
-                <span className='flex gap-1 items-center justify-center'>
-                    <span>Save</span>
-                    <Bookmark strokeWidth={1} size={18} />
-                </span>
-            )}
-        </button>
-    )
-}
 
 export default SaveButton
