@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    appDir: false,
+  },
 
   images: {
     domains: ['i.imgur.com', 'imagur.com'],
