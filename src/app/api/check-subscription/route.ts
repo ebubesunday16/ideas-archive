@@ -5,14 +5,12 @@ import { supabase } from '@/lib/supabaseClient';
 
 export async function GET(req: NextRequest) {
   try {
-    // Get the user session
     const session = await getServerSession(authOptions);
     
     if (!session || !session.user?.email) {
       return NextResponse.json({ subscribed: false, error: 'Not authenticated' }, { status: 401 });
     }
     
-    // Get user from database
     const { data: userData, error: userError } = await supabase
       .from('users')
       .select('id')
@@ -23,7 +21,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ subscribed: false, error: 'User not found' }, { status: 404 });
     }
     
-    // Check for active subscription
     const { data: subscriptionData, error: subError } = await supabase
       .from('subscriptions')
       .select('*')

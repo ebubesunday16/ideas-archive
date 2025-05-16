@@ -3,7 +3,7 @@
 import { useIdeasData } from "@/services/useIdeasData";
 import { ChevronDown } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import SignupOverlay from "./SignupOverlay";
 
@@ -15,8 +15,28 @@ export const FILTER_TYPES = {
   OLDEST: 'OLDEST',
 };
 
-export default function ProductGrid() {
+
+
+export default async function ProductGrid() {
   const { data: session, status } = useSession();
+  const [ isPremium, setIsPremium ] = useState(false)
+
+  useEffect(()=>{
+    if(session?.user) checkSubscriptionStatus()
+  }, [session])
+
+  const checkSubscriptionStatus = async () => {
+    try {
+      const response = await fetch('/api/check-subscription')
+      const data = await response.json()
+      setIsPremium(data.subscribed)
+
+    } catch (error) {
+      console.error('Failed to check subscription:', error)
+      setIsPremium(false)
+
+    }
+  }
   
   const initialVisibleCount = 10;
   const incrementAmount = 10;
@@ -157,7 +177,7 @@ export default function ProductGrid() {
           <div className="relative">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {visibleProducts.map((product, index) => {
-                const BlurItem = index > 4 ? `${!session && "blur-sm pointer-events-none"}` : "";
+                const BlurItem = index > 4 ? `${!isPremium && "blur-sm pointer-events-none"}` : "";
                 
                 return (
                   <ProductCard
