@@ -17,7 +17,7 @@ export const FILTER_TYPES = {
 
 
 
-export default async function ProductGrid() {
+export default function ProductGrid() {
   const { data: session, status } = useSession();
   const [ isPremium, setIsPremium ] = useState(false)
 
@@ -177,7 +177,7 @@ export default async function ProductGrid() {
           <div className="relative">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {visibleProducts.map((product, index) => {
-                const BlurItem = index > 4 ? `${!isPremium && "blur-sm pointer-events-none"}` : "";
+                const BlurItem = index > 4 ? `${isPremium === false && "blur-sm pointer-events-none"}` : "";
                 
                 return (
                   <ProductCard
