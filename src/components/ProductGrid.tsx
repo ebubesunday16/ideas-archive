@@ -290,7 +290,7 @@ export default function ProductGrid() {
                       <p className="text-gray-400 mb-6 max-w-md mx-auto">
                         Sign up to explore our complete archive of SaaS ideas with demand and low barrier entry.
                       </p>
-                      <Link href={'/api/auth/signIn'}>
+                      <Link href={'/api/auth/signin'}>
                         <button 
                         className="group bg-white text-black px-8 py-4 rounded-full font-medium hover:bg-gray-100 transition-all duration-200 flex items-center gap-2 mx-auto">
                           <span>Get Full Access</span>
