@@ -35,7 +35,7 @@ const Page = async ({ params } : {params: {id: number}}) => {
 
       {/* Hero Section */}
       <section className="relative z-10 pt-20 pb-16">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto">
           <div className="max-w-6xl mx-auto">
             {/* Badge */}
             <div className="text-center mb-8">
@@ -111,24 +111,24 @@ const Page = async ({ params } : {params: {id: number}}) => {
 
       {/* Main Content */}
       <section className="relative z-10 py-16">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto">
           <div className="max-w-6xl mx-auto">
             {/* Headline Section */}
-            <div className="bg-gradient-to-b from-gray-800/30 to-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 mb-12">
-              <div className="flex items-center gap-3 mb-4">
+            <div className="bg-gradient-to-b from-gray-800/30 to-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-2xl px-2 py-8 mb-12">
+              <div className="flex items-center gap-3 mb-4 px-4">
                 <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
                   <Zap className="w-4 h-4 text-white" />
                 </div>
                 <span className="text-sm text-purple-400 font-medium uppercase tracking-wide">Core Concept</span>
               </div>
-              <h2 className="text-3xl font-bold mb-4">{ideaData.headline}</h2>
+              <h2 className="text-3xl font-bold mb-4 px-4">{ideaData.headline}</h2>
             </div>
 
             {/* Components Grid */}
             <div className="space-y-12">
               {/* Keywords Section */}
-              <div className="bg-gradient-to-b from-gray-800/30 to-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8">
-                <div className="flex items-center gap-3 mb-6">
+              <div className="bg-gradient-to-b from-gray-800/30 to-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-2xl px-2 py-8">
+                <div className="flex items-center gap-3 mb-6 px-4">
                   <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
                     <Search className="w-4 h-4 text-white" />
                   </div>
@@ -138,8 +138,8 @@ const Page = async ({ params } : {params: {id: number}}) => {
               </div>
 
               {/* Idea Notes */}
-              <div className="bg-gradient-to-b from-gray-800/30 to-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8">
-                <div className="flex items-center gap-3 mb-6">
+              <div className="bg-gradient-to-b from-gray-800/30 to-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-2xl px-2 py-8">
+                <div className="flex items-center gap-3 mb-6 px-4">
                   <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
                     <BookOpen className="w-4 h-4 text-white" />
                   </div>
@@ -151,8 +151,8 @@ const Page = async ({ params } : {params: {id: number}}) => {
               {/* Two Column Layout for Analysis */}
               <div className="grid lg:grid-cols-2 gap-8">
                 {/* Competitor Analysis */}
-                <div className="bg-gradient-to-b from-gray-800/30 to-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8">
-                  <div className="flex items-center gap-3 mb-6">
+                <div className="bg-gradient-to-b from-gray-800/30 to-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-2xl px-2 py-8">
+                  <div className="flex items-center gap-3 mb-6 px-4">
                     <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg flex items-center justify-center">
                       <Users className="w-4 h-4 text-white" />
                     </div>
@@ -162,8 +162,8 @@ const Page = async ({ params } : {params: {id: number}}) => {
                 </div>
 
                 {/* Market Analysis */}
-                <div className="bg-gradient-to-b from-gray-800/30 to-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8">
-                  <div className="flex items-center gap-3 mb-6">
+                <div className="bg-gradient-to-b from-gray-800/30 to-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-2xl px-2 py-8">
+                  <div className="flex items-center gap-3 mb-6 px-4">
                     <div className="w-8 h-8 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
                       <TrendingUp className="w-4 h-4 text-white" />
                     </div>
@@ -174,8 +174,8 @@ const Page = async ({ params } : {params: {id: number}}) => {
               </div>
 
               {/* Monetization Potential */}
-              <div className="bg-gradient-to-b from-gray-800/30 to-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8">
-                <div className="flex items-center gap-3 mb-6">
+              <div className="bg-gradient-to-b from-gray-800/30 to-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-2xl px-2 py-8">
+                <div className="flex items-center gap-3 mb-6 px-4">
                   <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center">
                     <DollarSign className="w-4 h-4 text-white" />
                   </div>
@@ -187,7 +187,7 @@ const Page = async ({ params } : {params: {id: number}}) => {
 
             {/* Bottom CTA */}
             <div className="mt-16 text-center">
-              <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl p-8">
+              <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl px-2 py-8">
                 <h3 className="text-2xl font-bold mb-4">Ready to explore this opportunity?</h3>
                 <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
                   Get detailed market research, competitor analysis, and a step-by-step execution plan for this idea.

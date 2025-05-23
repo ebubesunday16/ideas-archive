@@ -158,7 +158,7 @@ export default function ProductGrid() {
 
       {/* Main Content */}
       <section className="py-12">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto">
           {/* Filter Section */}
           <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl p-6 mb-8">
             <div className="flex items-center gap-3 mb-6">

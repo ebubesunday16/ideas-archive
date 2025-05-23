@@ -42,7 +42,7 @@ const Footer = ({className}: {className?: string}) => {
     // </footer>
 
       <footer className="relative z-10 border-t border-gray-800 py-16">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto">
           <div className="flex flex-col md:flex-row justify-between gap-8 mb-12">
             <div className="max-w-sm">
               <Link href={'/'} >

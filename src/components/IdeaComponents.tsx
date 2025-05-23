@@ -97,7 +97,7 @@ const KeywordVariations = ({ keywords = sampleKeywords }) => {
   }, 0).toLocaleString();
 
   return (
-    <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl mb-6 overflow-hidden">
+    <div className="bg-gradient-to-b from-gray-800/30 to-gray-900/50 backdrop-blur-sm  rounded-2xl mb-6 overflow-hidden">
       <button 
         onClick={toggleDropdown}
         className="w-full flex items-center justify-end p-6 hover:bg-gray-700/30 transition-all duration-300 group"
@@ -113,7 +113,7 @@ const KeywordVariations = ({ keywords = sampleKeywords }) => {
       </button>
       
       {isOpen && (
-        <div className="px-6 pb-6">
+        <div className="px-2 pb-6">
           <div className="bg-gray-900/50 border border-gray-700 rounded-xl overflow-hidden">
             {/* Stats Header */}
             <div className="bg-gray-800/50 border-b border-gray-700 p-4">
@@ -183,7 +183,7 @@ const IdeaNotes = ({ notes = sampleNotes }) => {
   const toggleDropdown = () => setIsOpen(!isOpen);
   
   return (
-    <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl mb-6 overflow-hidden">
+    <div className="bg-gradient-to-b from-gray-800/30 to-gray-900/50 backdrop-blur-sm  rounded-2xl mb-6 overflow-hidden">
       <button
         onClick={toggleDropdown}
         className="w-full flex items-center justify-end p-6 hover:bg-gray-700/30 transition-all duration-300 group"
@@ -199,7 +199,7 @@ const IdeaNotes = ({ notes = sampleNotes }) => {
       </button>
       
       {isOpen && (
-        <div className="px-6 pb-6 space-y-4">
+        <div className="px-2 pb-6 space-y-4">
           {notes.length === 0 ? (
             <div className="p-8 text-center text-gray-500">No notes available</div>
           ) : (
@@ -301,7 +301,7 @@ const MarketAnalysis = ({ data = sampleMarketAnalysis }) => {
   const trendDescription = getTrendDescription(data.trend);
   
   return (
-    <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl mb-6 overflow-hidden">
+    <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm  rounded-2xl mb-6 overflow-hidden">
       <button
         onClick={toggleDropdown}
         className="w-full flex items-center justify-end p-6 hover:bg-gray-700/30 transition-all duration-300 group"
@@ -314,7 +314,7 @@ const MarketAnalysis = ({ data = sampleMarketAnalysis }) => {
       </button>
       
       {isOpen && (
-        <div className="px-6 pb-6">
+        <div className="px-2 pb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-4">
               <div className="text-center">
@@ -385,7 +385,7 @@ const MonetizationPotential = ({ data = sampleMonetization }) => {
   const toggleDropdown = () => setIsOpen(!isOpen);
   
   return (
-    <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl mb-6 overflow-hidden">
+    <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm  rounded-2xl mb-6 overflow-hidden">
       <button
         onClick={toggleDropdown}
         className="w-full flex items-center justify-end p-6 hover:bg-gray-700/30 transition-all duration-300 group"
@@ -401,7 +401,7 @@ const MonetizationPotential = ({ data = sampleMonetization }) => {
       </button>
       
       {isOpen && (
-        <div className="px-6 pb-6 space-y-4">
+        <div className="px-2 pb-6 space-y-4">
           {data && data.map((item, index) => (
             <div key={index} className="bg-gray-900/50 border border-gray-700 rounded-xl overflow-hidden">
               <div className="bg-gray-800/50 border-b border-gray-700 px-4 py-3">
@@ -468,7 +468,7 @@ const CompetitorAnalysis = ({ competitors = sampleCompetitors }) => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl mb-6 overflow-hidden">
+    <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm  rounded-2xl mb-6 overflow-hidden">
       <button 
         onClick={toggleDropdown}
         className="w-full flex items-center justify-end p-6 hover:bg-gray-700/30 transition-all duration-300 group"
@@ -484,7 +484,7 @@ const CompetitorAnalysis = ({ competitors = sampleCompetitors }) => {
       </button>
       
       {isOpen && (
-        <div className="px-6 pb-6">
+        <div className="px-2 pb-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Traffic Distribution Chart */}
             <div className="bg-gray-900/50 border border-gray-700 rounded-xl overflow-hidden">

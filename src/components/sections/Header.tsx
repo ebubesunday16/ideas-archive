@@ -76,7 +76,7 @@ const Header = ({className}: {className?: string}) => {
     // </header>
 
 
-    <header className="relative z-10 container mx-auto px-6 py-6">
+    <header className="relative z-10 container mx-auto  py-6">
         <nav className="flex justify-between items-center">
         <Link href={'/'}>
           <div className="text-xl font-semibold tracking-tight">
