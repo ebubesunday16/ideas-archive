@@ -3,67 +3,74 @@ import { getCurrentUser, getSavedIdeas, unsaveIdea } from '@/services/usersFetch
 import { IdeasType } from '@/types/idea';
 import { signOut, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+import { User, Heart, TrendingUp, Calendar, Mail, Shield, Bookmark, Eye, Trash2, LogOut } from 'lucide-react';
 
-// Skeleton loader component
+// Skeleton loader component with modern dark theme
 const SkeletonLoader = () => {
   return (
-    <div className="min-h-screen p-8">
-      {/* Header skeleton */}
-      <div className="bg-gray-800 p-4 mb-6 animate-pulse">
-        <div className="flex justify-between items-center">
-          <div className="h-5 bg-gray-500 rounded w-40"></div>
-          <div className="h-8 bg-gray-500 rounded w-24"></div>
+    <div className="min-h-screen bg-gray-950">
+      <div className="bg-gray-900/50 backdrop-blur-sm border-b border-gray-800 p-6 animate-pulse">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="h-6 bg-gray-700 rounded w-48"></div>
+          <div className="h-10 bg-gray-700 rounded-full w-24"></div>
         </div>
       </div>
       
-      {/* Tabs skeleton */}
-      <div className="mb-6 flex border-b border-gray-400 animate-pulse">
-        <div className="h-10 bg-gray-300 rounded w-24 mr-2"></div>
-        <div className="h-10 bg-gray-300 rounded w-32"></div>
-      </div>
-      
-      {/* Content skeleton */}
-      <div className="border border-gray-400 bg-white animate-pulse">
-        <div className="w-full h-12 bg-gray-300"></div>
-        <div className="p-4">
-          <div className="flex flex-col md:flex-row gap-6">
-            {/* Profile image skeleton */}
-            <div className="md:w-1/4 flex flex-col items-center mb-4 md:mb-0">
-              <div className="w-32 h-32 rounded-full bg-gray-300"></div>
-            </div>
-            
-            {/* Profile details skeleton */}
-            <div className="md:w-3/4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i}>
-                    <div className="h-4 bg-gray-300 rounded w-20 mb-2"></div>
-                    <div className="h-6 bg-gray-300 rounded w-full"></div>
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Profile Card Skeleton */}
+          <div className="lg:col-span-1">
+            <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-8 animate-pulse">
+              <div className="text-center">
+                <div className="w-24 h-24 bg-gray-700 rounded-full mx-auto mb-6"></div>
+                <div className="h-6 bg-gray-700 rounded w-32 mx-auto mb-2"></div>
+                <div className="h-4 bg-gray-700 rounded w-40 mx-auto mb-8"></div>
+              </div>
+              <div className="space-y-4">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-5 h-5 bg-gray-700 rounded"></div>
+                    <div className="flex-1">
+                      <div className="h-3 bg-gray-700 rounded w-20 mb-1"></div>
+                      <div className="h-4 bg-gray-700 rounded w-full"></div>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      
-      {/* Ideas skeleton */}
-      <div className="mt-6 border border-gray-400 bg-white animate-pulse">
-        <div className="w-full h-12 bg-gray-300"></div>
-        <div className="p-2">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="border border-gray-400 bg-white">
-                <div className="h-8 bg-gray-300 w-full"></div>
-                <div className="p-2">
-                  <div className="h-20 bg-gray-300 mb-3"></div>
-                  <div className="flex justify-between">
-                    <div className="h-8 bg-gray-300 w-16"></div>
-                    <div className="h-8 bg-gray-300 w-24"></div>
+          
+          {/* Content Area Skeleton */}
+          <div className="lg:col-span-2 space-y-8">
+            <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-8 animate-pulse">
+              <div className="h-6 bg-gray-700 rounded w-32 mb-6"></div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
+                    <div className="h-12 bg-gray-700 rounded w-12 mb-4"></div>
+                    <div className="h-8 bg-gray-700 rounded w-16 mb-2"></div>
+                    <div className="h-4 bg-gray-700 rounded w-24"></div>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
+            </div>
+            
+            {/* Ideas Skeleton */}
+            <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-8 animate-pulse">
+              <div className="h-6 bg-gray-700 rounded w-32 mb-6"></div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
+                    <div className="h-5 bg-gray-700 rounded w-3/4 mb-3"></div>
+                    <div className="h-16 bg-gray-700 rounded mb-4"></div>
+                    <div className="flex justify-between">
+                      <div className="h-8 bg-gray-700 rounded w-16"></div>
+                      <div className="h-8 bg-gray-700 rounded w-20"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -76,11 +83,6 @@ export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [savedIdeas, setSavedIdeas] = useState<IdeasType[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('profile');
-  
-  const [ideasOpen, setIdeasOpen] = useState(true);
-  const [profileOpen, setProfileOpen] = useState(false);
-  const [statsOpen, setStatsOpen] = useState(true);
 
   useEffect(() => {
     async function loadUserData() {
@@ -92,7 +94,6 @@ export default function Dashboard() {
           const ideas = await getSavedIdeas();
           setSavedIdeas(ideas);
           
-         
         } catch (error) {
           console.error('Error loading user data:', error);
         } finally {
@@ -115,28 +116,28 @@ export default function Dashboard() {
     }
   };
 
-  // Toggle section functions
-  const toggleIdeasSection = () => setIdeasOpen(!ideasOpen);
-  const toggleProfileSection = () => setProfileOpen(!profileOpen);
-  const toggleStatsSection = () => setStatsOpen(!statsOpen);
-  
-
   if (status === 'loading' || loading) {
     return <SkeletonLoader />;
   }
 
   if (status === 'unauthenticated') {
     return (
-      <div className="flex flex-col items-center p-8  ">
-        <div className="p-6 max-w-md bg-white border-2 border-gray-400 shadow-md">
-          <h1 className="text-2xl font-bold mb-4 text-gray-800 font-mono text-center">DASHBOARD</h1>
-          <p className="text-center font-mono">Please sign in to view your dashboard.</p>
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center p-6">
+        <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl p-12 max-w-md w-full text-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+            <User className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-2xl font-bold text-white mb-4">Access Required</h1>
+          <p className="text-gray-400 mb-6">Please sign in to view your dashboard and saved ideas.</p>
+          <button className="w-full bg-white text-black py-3 rounded-full font-medium hover:bg-gray-100 transition-all duration-200">
+            Sign In
+          </button>
         </div>
       </div>
     );
   }
 
-  // Extract additional user information from session and user data
+  // Extract user information
   const userImage = session.user.image || '/default-avatar.png';
   const memberSince = user?.createdAt 
     ? new Date(user.createdAt).toLocaleDateString() 
@@ -145,163 +146,177 @@ export default function Dashboard() {
     ? new Date(user?.lastLogin).toLocaleDateString() 
     : new Date().toLocaleDateString();
 
+  // Mock stats - replace with real data
+  const stats = [
+    { label: 'Saved Ideas', value: savedIdeas.length, icon: Heart, color: 'from-red-500 to-pink-500' },
+    { label: 'Views This Month', value: '2.4k', icon: TrendingUp, color: 'from-green-500 to-emerald-500' },
+    { label: 'Days Active', value: '89', icon: Calendar, color: 'from-blue-500 to-cyan-500' },
+    { label: 'Account Level', value: 'Pro', icon: Shield, color: 'from-purple-500 to-violet-500' }
+  ];
+
   return (
-    <div className="border border-black pb-8">
-      <div className="bg-gray-800 px-3 py-4 sm:px-8 mb-6">
-        <div className=" mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <span className="text-gray-300 font-mono text-sm">
-              Welcome back, {session.user.name}
-            </span>
-          </div>
+    <div className="min-h-screen bg-gray-950">
+      {/* Header */}
+      <header className="bg-gray-900/50 backdrop-blur-sm border-b border-gray-800 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-gray-300 font-medium">
+                Welcome back, {session.user.name}
+              </span>
+            </div>
             <button 
               onClick={() => signOut()}
-              className="bg-white text-gray-800 px-3 py-1 font-mono text-sm border border-gray-400 hover:bg-gray-200"
+              className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full transition-all duration-200 border border-gray-700 hover:border-gray-600"
             >
-              SIGN OUT
+              <LogOut className="w-4 h-4" />
+              Sign Out
             </button>
+          </div>
         </div>
-      </div>
-      
-      <div className="mx-auto px-3 sm:px-8">
-        {/* Navigation Tabs */}
-        <div className="mb-6 flex border-b border-gray-400">
-          <button 
-            className={`px-4 py-2 font-mono text-sm ${activeTab === 'profile' ? 'bg-white border-t border-l border-r border-gray-400 -mb-px' : 'bg-gray-200'}`}
-            onClick={() => setActiveTab('profile')}
-          >
-            PROFILE
-          </button>
-          <button 
-            className={`px-4 py-2 font-mono text-sm ${activeTab === 'ideas' ? 'bg-white border-t border-l border-r border-gray-400 -mb-px' : 'bg-gray-200'}`}
-            onClick={() => setActiveTab('ideas')}
-          >
-            SAVED IDEAS
-          </button>
-          
-        </div>
-        
-        {/* Profile Tab Content */}
-        {activeTab === 'profile' && (
-          <div className="space-y-6">
-            {/* User Profile Card */}
-            <div className="border border-gray-400 bg-white">
-              <button
-                onClick={toggleProfileSection}
-                className="w-full flex items-center justify-between p-3 bg-gray-200 border-b border-gray-400 hover:bg-gray-300 transition-colors text-sm font-mono uppercase tracking-wider"
-              >
-                <span className="font-bold">User Profile</span>
-                <span>{profileOpen ? '▲' : '▼'}</span>
-              </button>
-              
-              {profileOpen && (
-                <div className="p-4 md:flex gap-6">
-                  <div className="md:w-1/4 flex flex-col items-center mb-4 md:mb-0">
-                    <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-gray-300 mb-2">
-                      <img src={userImage} alt={session.user.name} className="w-full h-full object-cover" />
-                    </div>
-                    
+      </header>
+
+      <main className="max-w-7xl mx-auto px-6 py-12">
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Profile Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 sticky top-24">
+              <div className="text-center mb-8">
+                <div className="relative inline-block mb-4">
+                  <img 
+                    src={userImage} 
+                    alt={session.user.name} 
+                    className="w-24 h-24 rounded-full border-2 border-gray-600"
+                  />
+                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-gray-900"></div>
+                </div>
+                <h2 className="text-xl font-semibold text-white mb-1">{session.user.name}</h2>
+                <p className="text-gray-400 text-sm">@{user?.username || session.user.name.toLowerCase().replace(/\s/g, '')}</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 text-gray-300">
+                  <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-gray-400" />
                   </div>
-                  
-                  <div className="md:w-3/4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <h3 className="font-mono text-xs text-gray-500 mb-1">FULL NAME</h3>
-                        <p className="font-mono font-bold">{session.user.name}</p>
+                  <div className="flex-1">
+                    <p className="text-xs text-gray-500 uppercase tracking-wider">Email</p>
+                    <p className="text-sm font-medium">{session.user.email}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 text-gray-300">
+                  <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center">
+                    <Calendar className="w-5 h-5 text-gray-400" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-gray-500 uppercase tracking-wider">Member Since</p>
+                    <p className="text-sm font-medium">{memberSince}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 text-gray-300">
+                  <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center">
+                    <TrendingUp className="w-5 h-5 text-gray-400" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-gray-500 uppercase tracking-wider">Last Login</p>
+                    <p className="text-sm font-medium">{lastLogin}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 text-gray-300">
+                  <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center">
+                    <Shield className="w-5 h-5 text-gray-400" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-gray-500 uppercase tracking-wider">Account Type</p>
+                    <p className="text-sm font-medium">{user?.accountType || 'Standard'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Stats Section */}
+            <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl p-8">
+              <h3 className="text-xl font-semibold text-white mb-6">Dashboard Overview</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {stats.map((stat, index) => (
+                  <div key={index} className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 hover:border-gray-600 transition-all duration-300 group">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
+                        <stat.icon className="w-6 h-6 text-white" />
                       </div>
-                      
                       <div>
-                        <h3 className="font-mono text-xs text-gray-500 mb-1">EMAIL</h3>
-                        <p className="font-mono">{session.user.email}</p>
-                      </div>
-                      
-                      <div>
-                        <h3 className="font-mono text-xs text-gray-500 mb-1">MEMBER SINCE</h3>
-                        <p className="font-mono">{memberSince}</p>
-                      </div>
-                      
-                      <div>
-                        <h3 className="font-mono text-xs text-gray-500 mb-1">LAST LOGIN</h3>
-                        <p className="font-mono">{lastLogin}</p>
-                      </div>
-                      
-                      <div>
-                        <h3 className="font-mono text-xs text-gray-500 mb-1">ACCOUNT TYPE</h3>
-                        <p className="font-mono">{user?.accountType || 'Standard'}</p>
-                      </div>
-                      
-                      <div>
-                        <h3 className="font-mono text-xs text-gray-500 mb-1">USERNAME</h3>
-                        <p className="font-mono">@{user?.username || session.user.name.toLowerCase().replace(/\s/g, '')}</p>
+                        <p className="text-2xl font-bold text-white">{stat.value}</p>
+                        <p className="text-sm text-gray-400">{stat.label}</p>
                       </div>
                     </div>
-                    
-                    
-                    
-                    
                   </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Saved Ideas Section */}
+            <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl p-8">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+                  <Bookmark className="w-5 h-5" />
+                  Saved Ideas
+                </h3>
+                {savedIdeas.length > 0 && (
+                  <span className="text-sm text-gray-400">
+                    {savedIdeas.length} idea{savedIdeas.length !== 1 ? 's' : ''}
+                  </span>
+                )}
+              </div>
+
+              {savedIdeas.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Heart className="w-8 h-8 text-gray-600" />
+                  </div>
+                  <h4 className="text-lg font-medium text-gray-300 mb-2">No saved ideas yet</h4>
+                  <p className="text-gray-500 mb-6">Start exploring and save ideas that inspire you.</p>
+                  <button className="bg-white text-black px-6 py-3 rounded-full font-medium hover:bg-gray-100 transition-all duration-200">
+                    Browse Ideas
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {savedIdeas.map(idea => (
+                    <div key={idea.id} className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 hover:border-gray-600 transition-all duration-300 group">
+                      <h4 className="font-semibold text-white mb-3 group-hover:text-gray-100 transition-colors">
+                        {idea.title}
+                      </h4>
+                      <p className="text-gray-400 text-sm mb-4 line-clamp-3 leading-relaxed">
+                        {idea.excerpt}
+                      </p>
+                      <div className="flex justify-between items-center">
+                        <button className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition-all duration-200">
+                          <Eye className="w-4 h-4" />
+                          View
+                        </button>
+                        <button
+                          onClick={() => handleRemoveIdea(idea.id)}
+                          className="flex items-center gap-2 bg-gray-700 text-gray-300 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-600 hover:text-white transition-all duration-200"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
-            
-           
           </div>
-        )}
-        
-        {/* Saved Ideas Tab Content */}
-        {activeTab === 'ideas' && (
-          <div className="border border-gray-400">
-            <button
-              onClick={toggleIdeasSection}
-              className="w-full flex items-center justify-between p-3 bg-gray-200 border-b border-gray-400 hover:bg-gray-300 transition-colors text-sm font-mono uppercase tracking-wider"
-            >
-              <span className="font-bold">Saved Ideas</span>
-              <span>{ideasOpen ? '▲' : '▼'}</span>
-            </button>
-            
-            {ideasOpen && (
-              <div className="p-2 bg-white space-y-2">
-                {savedIdeas.length === 0 ? (
-                  <div className="p-4 text-center text-gray-500 font-mono text-sm">
-                    You haven't saved any ideas yet.
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {savedIdeas.map(idea => (
-                      <div key={idea.id} className="border border-gray-400 bg-white">
-                        <div className="bg-gray-200 border-b border-gray-400 px-2 py-1">
-                          <h3 className="font-mono font-bold text-sm">{idea.title}</h3>
-                        </div>
-                        <div className="p-2">
-                          <p className="font-mono text-xs leading-relaxed mb-3 bg-gray-50 p-2 border border-gray-200">
-                            {idea.excerpt}
-                          </p>
-                          <div className="flex justify-between items-center">
-                            <button
-                              className="bg-gray-800 text-white px-3 py-1 text-xs font-mono hover:bg-gray-700"
-                              onClick={() => {/* Navigate to idea details */}}
-                            >
-                              VIEW
-                            </button>
-                            <button
-                              className="bg-white text-gray-700 px-3 py-1 text-xs font-mono border border-gray-400 hover:bg-gray-100"
-                              onClick={() => handleRemoveIdea(idea.id)}
-                            >
-                              REMOVE
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
-        
-        
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

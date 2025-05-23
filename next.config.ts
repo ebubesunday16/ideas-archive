@@ -1,9 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    appDir: false,
-  },
+  
 
   images: {
     domains: ['i.imgur.com', 'imagur.com'],
@@ -26,15 +24,7 @@ const nextConfig: NextConfig = {
     return config;
   },
 
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/ideas',
-        permanent: true,
-      },
-    ];
-  },
+  
 };
 
 export default nextConfig;

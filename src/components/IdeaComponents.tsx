@@ -1,34 +1,57 @@
 'use client'
-import ThemeButton from "@/components/ThemeButton";
-import { Competitor, Keyword, MarketAnalysis as MarketAnalysisType, MonetizationPotential as MonetizationPotentialType, Note } from "@/ideas";
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
-import { ArrowDown, ArrowUp01 as ArrowUp, CopyCheck as Copy, DownloadCloud as Download, Image as ImageIcon } from 'lucide-react';
-import Link from "next/link";
-import { useRef, useState } from 'react';
-import { CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-
+import { useState, useRef } from 'react';
+import { 
+  ArrowDown, 
+  ArrowUp, 
+  Copy, 
+  Download, 
+  Image as ImageIcon, 
+  ExternalLink,
+  Target,
+  TrendingUp,
+  Users,
+  DollarSign,
+  FileText,
+  BarChart3
+} from 'lucide-react';
+import { 
+  CartesianGrid, 
+  Cell, 
+  Legend, 
+  Line, 
+  LineChart, 
+  Pie, 
+  PieChart, 
+  ResponsiveContainer, 
+  Tooltip, 
+  XAxis, 
+  YAxis 
+} from 'recharts';
 
 
 // Competition level badge component
-const KeywordVariations = ({ keywords } : {keywords: Keyword[]}) => {
-  const CompetitionBadge = ({ level }) => {
-    const getColor = () => {
-      switch (level.toLowerCase()) {
-        case 'high': return 'bg-red-100 text-red-800';
-        case 'medium': return 'bg-yellow-100 text-yellow-800';
-        case 'low': return 'bg-green-100 text-green-800';
-        default: return 'bg-gray-100 text-gray-800';
-      }
-    };
-    
-    return (
-      <span className={`px-2 py-1 rounded-full text-xs ${getColor()}`}>
-        {level}
-      </span>
-    );
+const CompetitionBadge = ({ level }) => {
+  const getStyles = () => {
+    switch (level.toLowerCase()) {
+      case 'high': 
+        return 'bg-red-500/20 text-red-300 border-red-500/30';
+      case 'medium': 
+        return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+      case 'low': 
+        return 'bg-green-500/20 text-green-300 border-green-500/30';
+      default: 
+        return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+    }
   };
   
+  return (
+    <span className={`px-2 py-1 rounded-full text-xs border ${getStyles()}`}>
+      {level}
+    </span>
+  );
+};
+
+const KeywordVariations = ({ keywords = sampleKeywords }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [selectedKeywords, setSelectedKeywords] = useState([]);
   
@@ -54,7 +77,6 @@ const KeywordVariations = ({ keywords } : {keywords: Keyword[]}) => {
 
   // Sort keywords by search volume (highest first)
   const sortedKeywords = [...keywords].sort((a, b) => {
-    // Convert volume strings like "10K" to numbers for comparison
     const getNumericVolume = (volStr) => {
       const num = parseFloat(volStr.replace(/[^0-9.]/g, ''));
       if (volStr.includes('K')) return num * 1000;
@@ -75,68 +97,77 @@ const KeywordVariations = ({ keywords } : {keywords: Keyword[]}) => {
   }, 0).toLocaleString();
 
   return (
-    <div className="border border-gray-400 mb-6 font-mono">
+    <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl mb-6 overflow-hidden">
       <button 
         onClick={toggleDropdown}
-        className="w-full flex items-center justify-between p-3 border-b bg-white border-gray-400 hover:bg-gray-200 transition-colors duration-300 text-sm uppercase tracking-wider"
+        className="w-full flex items-center justify-end p-6 hover:bg-gray-700/30 transition-all duration-300 group"
       >
-        <span className="font-bold">Keyword Variations</span>
-        {isOpen ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
+        
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-400">{keywords.length} keywords</span>
+          {isOpen ? 
+            <ArrowUp className="h-5 w-5 text-gray-400 group-hover:text-white transition-colors" /> : 
+            <ArrowDown className="h-5 w-5 text-gray-400 group-hover:text-white transition-colors" />
+          }
+        </div>
       </button>
       
       {isOpen && (
-        <div className="p-2">
-          {/* Keyword List */}
-          <div className="border border-gray-400">
-            <div className="p-2 border-b border-gray-400 text-xs uppercase font-bold">
-              Select keywords:
+        <div className="px-6 pb-6">
+          <div className="bg-gray-900/50 border border-gray-700 rounded-xl overflow-hidden">
+            {/* Stats Header */}
+            <div className="bg-gray-800/50 border-b border-gray-700 p-4">
+              <div className="grid grid-cols-2 gap-4 text-center">
+                <div>
+                  <div className="text-2xl font-bold text-white">{keywords.length}</div>
+                  <div className="text-sm text-gray-400">Total Keywords</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-white">{totalMonthlyVolume}</div>
+                  <div className="text-sm text-gray-400">Monthly Volume</div>
+                </div>
+              </div>
             </div>
             
             {/* Table Header */}
-            <div className="grid grid-cols-12 text-xs uppercase tracking-wider font-bold border-b border-gray-400 bg-white overflow-x-auto">
-              <div className="col-span-6 p-2">Keyword</div>
-              <div className="col-span-3 p-2">Volume</div>
-              <div className="col-span-3 p-2">Competition</div>
+            <div className="grid grid-cols-12 text-sm font-medium text-gray-300 border-b border-gray-700 bg-gray-800/30">
+              <div className="col-span-6 p-4">Keyword</div>
+              <div className="col-span-3 p-4">Volume</div>
+              <div className="col-span-3 p-4">Competition</div>
             </div>
             
             {/* Table Body */}
-            <div className="overflow-x-auto divide-y divide-gray-300">
+            <div className="divide-y divide-gray-700">
               {sortedKeywords.map((keyword, index) => (
-                <div key={index} className="grid grid-cols-12 text-xs hover:bg-gray-50">
-                  <div className="col-span-6 p-2 flex items-center">
+                <div key={index} className="grid grid-cols-12 text-sm hover:bg-gray-700/30 transition-all duration-200">
+                  <div className="col-span-6 p-4 flex items-center">
                     <input
                       type="checkbox"
                       id={`keyword-${index}`}
                       checked={selectedKeywords.includes(keyword.keyword)}
                       onChange={() => toggleKeywordSelection(keyword)}
-                      className="mr-2"
+                      className="mr-3 w-4 h-4 bg-gray-700 border-gray-600 rounded focus:ring-purple-500 focus:ring-2"
                     />
-                    <label htmlFor={`keyword-${index}`} className="cursor-pointer">
+                    <label htmlFor={`keyword-${index}`} className="cursor-pointer text-gray-300 hover:text-white transition-colors">
                       {keyword.keyword}
                     </label>
                   </div>
-                  <div className="col-span-3 p-2">{keyword.volume}</div>
-                  <div className="col-span-3 p-2">
+                  <div className="col-span-3 p-4 text-gray-300 font-medium">{keyword.volume}</div>
+                  <div className="col-span-3 p-4">
                     <CompetitionBadge level={keyword.competition} />
                   </div>
                 </div>
               ))}
             </div>
-            
-            {/* Summary Stats */}
-            <div className="border-t border-gray-400 bg-white p-2 text-xs">
-              <div className="grid grid-cols-2">
-                <div><strong>Total Keywords:</strong> {keywords.length}</div>
-                <div><strong>Monthly Volume:</strong> {totalMonthlyVolume}</div>
-              </div>
-            </div>
           </div>
-          <div className="mt-2">
+          
+          <div className="mt-4">
             <button 
               onClick={copyToClipboard} 
-              className="flex items-center justify-center border border-gray-400 bg-white hover:bg-gray-200 p-2 text-xs uppercase tracking-wider"
+              className="flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full font-medium hover:bg-gray-100 transition-all duration-200"
             >
-              <Copy className="h-3 w-3 mr-1" /> Copy Keywords
+              <Copy className="h-4 w-4" /> 
+              Copy {selectedKeywords.length > 0 ? 'Selected' : 'All'} Keywords
             </button>
           </div>
         </div>
@@ -146,36 +177,39 @@ const KeywordVariations = ({ keywords } : {keywords: Keyword[]}) => {
 };
 
 // IdeaNotes Component
-const IdeaNotes = ({ notes } : { notes: Note[]} ) => {
+const IdeaNotes = ({ notes = sampleNotes }) => {
   const [isOpen, setIsOpen] = useState(true);
   
   const toggleDropdown = () => setIsOpen(!isOpen);
   
-return (
-    <div className="border border-gray-400 mb-6 ">
+  return (
+    <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl mb-6 overflow-hidden">
       <button
         onClick={toggleDropdown}
-        className="w-full flex items-center justify-between p-3 bg-white border-b border-gray-400 hover:bg-gray-200 transition-colors duration-300 text-sm uppercase tracking-wider"
+        className="w-full flex items-center justify-end p-6 hover:bg-gray-700/30 transition-all duration-300 group"
       >
-        <span className="font-bold">Idea Notes</span>
-        {isOpen ? 
-          <ArrowUp className="h-4 w-4" /> : 
-          <ArrowDown className="h-4 w-4" />
-        }
+        
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-400">{notes.length} notes</span>
+          {isOpen ? 
+            <ArrowUp className="h-5 w-5 text-gray-400 group-hover:text-white transition-colors" /> : 
+            <ArrowDown className="h-5 w-5 text-gray-400 group-hover:text-white transition-colors" />
+          }
+        </div>
       </button>
       
       {isOpen && (
-        <div className="p-2 space-y-2">
+        <div className="px-6 pb-6 space-y-4">
           {notes.length === 0 ? (
-            <div className="p-2 text-center text-gray-500 text-xs">No notes yet</div>
+            <div className="p-8 text-center text-gray-500">No notes available</div>
           ) : (
             notes.map((note, index) => (
-              <div key={index} className="border border-gray-300 bg-white">
-                <div className="bg-white border-b border-gray-300 px-2 py-1">
-                  <h4 className="text-xs uppercase tracking-wider font-bold">{note.title}</h4>
+              <div key={index} className="bg-gray-900/50 border border-gray-700 rounded-xl overflow-hidden">
+                <div className="bg-gray-800/50 border-b border-gray-700 px-4 py-3">
+                  <h4 className="font-semibold text-white">{note.title}</h4>
                 </div>
-                <div className="p-2">
-                  <p className="text-xs leading-relaxed">{note.content}</p>
+                <div className="p-4">
+                  <p className="text-gray-300 leading-relaxed">{note.content}</p>
                 </div>
               </div>
             ))
@@ -187,7 +221,10 @@ return (
 };
 
 // Market Analysis Component
-const MarketAnalysis = ({ data }: {data: MarketAnalysisType}) => {
+const MarketAnalysis = ({ data = sampleMarketAnalysis }) => {
+  const [isOpen, setIsOpen] = useState(true);
+  
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
   const getCurrentMonthIndex = () => {
     const now = new Date();
@@ -201,22 +238,22 @@ const MarketAnalysis = ({ data }: {data: MarketAnalysisType}) => {
     const availableMonths = allMonths.slice(0, currentMonthIndex + 1);
     
     switch (trend?.toLowerCase()) {
-      case "Upward":
+      case "upward":
         return availableMonths.map((month, index) => ({
           month,
           value: 30 + (index * 10)
         }));
-      case "Downward":
+      case "downward":
         return availableMonths.map((month, index) => ({
           month,
           value: 90 - (index * 8)
         }));
-      case "Rapid growth":
+      case "rapid growth":
         return availableMonths.map((month, index) => ({
           month,
           value: 50 + Math.sin(index * 1.5) * 25
         }));
-      case "Steady":
+      case "steady":
         return availableMonths.map((month, index) => ({
           month,
           value: 50 + (Math.random() * 6 - 3)
@@ -231,351 +268,330 @@ const MarketAnalysis = ({ data }: {data: MarketAnalysisType}) => {
   
   const getChartColor = (trend) => {
     switch (trend?.toLowerCase()) {
-      case "Upward":
+      case "upward":
         return "#10b981"; // emerald/green
-      case "Downward":
+      case "downward":
         return "#ef4444"; // red
-      case "Rapid growth":
+      case "rapid growth":
         return "#f59e0b"; // amber
-      case "Steady":
+      case "steady":
         return "#6366f1"; // indigo
       default:
-        return "#6366f1"; // indigo
+        return "#8b5cf6"; // purple
     }
   };
   
-  // Get trend description based on trend
   const getTrendDescription = (trend) => {
     switch (trend?.toLowerCase()) {
-      case "Upward":
+      case "upward":
         return "Steadily growing market interest";
-      case "Downward":
+      case "downward":
         return "Declining market interest over time";
-      case "Rapid growth":
+      case "rapid growth":
         return "Fluctuating market interest with peaks and valleys";
-      case "Steady":
+      case "steady":
         return "Stable market interest with minimal variation";
       default:
         return "No clear trend available";
     }
   };
-
-
-  const [isOpen, setIsOpen] = useState(false);
-  
-  const toggleDropdown = () => setIsOpen(!isOpen);
   
   const trendData = getTrendData(data.trend);
   const chartColor = getChartColor(data.trend);
   const trendDescription = getTrendDescription(data.trend);
-  const currentMonth = allMonths[getCurrentMonthIndex()];
   
   return (
-    <div className="border border-gray-400 mb-6 font-mono shadow-md">
+    <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl mb-6 overflow-hidden">
       <button
         onClick={toggleDropdown}
-        className="w-full flex items-center justify-between p-3 bg-white border-b border-gray-400 hover:bg-gray-200 transition-colors duration-300 text-sm uppercase tracking-wider"
+        className="w-full flex items-center justify-end p-6 hover:bg-gray-700/30 transition-all duration-300 group"
       >
-        <span className="font-bold">Market Analysis</span>
-        {isOpen ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
+        
+        {isOpen ? 
+          <ArrowUp className="h-5 w-5 text-gray-400 group-hover:text-white transition-colors" /> : 
+          <ArrowDown className="h-5 w-5 text-gray-400 group-hover:text-white transition-colors" />
+        }
       </button>
       
       {isOpen && (
-        <div className="p-2">
-          <div className="grid grid-cols-2 gap-1 mb-2">
-            <div className="border border-gray-400">
-              <div className="bg-white border-b border-gray-400 p-2 text-xs uppercase font-bold">
-                Monthly Search Volume 
-              </div>
-              <div className="p-2 text-center">
-                <p className="font-bold">{data.search_volume ?? 'N/A'}</p>
+        <div className="px-6 pb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white mb-1">{data.search_volume ?? 'N/A'}</div>
+                <div className="text-sm text-gray-400">Monthly Search Volume</div>
               </div>
             </div>
             
-            <div className="border border-gray-400">
-              <div className="bg-white border-b border-gray-400 p-2 text-xs uppercase font-bold">
-                Competition Level
-              </div>
-              <div className="p-2 text-center">
-                <p className="font-bold">{data.competition_level ?? 'N/A'}</p>
+            <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white mb-1">{data.competition_level ?? 'N/A'}</div>
+                <div className="text-sm text-gray-400">Competition Level</div>
               </div>
             </div>
           </div>
           
-          {/* Market trend visualization using Recharts */}
-          <div className="border border-gray-400">
-            <div className="bg-white border-b border-gray-400 p-2 text-xs uppercase font-bold">
-              Market Trend: {data.trend ?? 'Unknown'}
+          {/* Market trend visualization */}
+          <div className="bg-gray-900/50 border border-gray-700 rounded-xl overflow-hidden">
+            <div className="bg-gray-800/50 border-b border-gray-700 px-4 py-3">
+              <h4 className="font-semibold text-white">Market Trend: {data.trend ?? 'Unknown'}</h4>
             </div>
-            <div className="p-2">
-              <div className="h-64">
+            <div className="p-4">
+              <div className="h-64 mb-4">
                 {trendData.length > 0 ? (
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={trendData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="month" />
-                      <YAxis />
-                      <Tooltip />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                      <XAxis dataKey="month" stroke="#9CA3AF" />
+                      <YAxis stroke="#9CA3AF" />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#1F2937', 
+                          border: '1px solid #374151',
+                          borderRadius: '8px',
+                          color: '#F3F4F6'
+                        }} 
+                      />
                       <Line 
                         type="monotone" 
                         dataKey="value" 
                         stroke={chartColor} 
-                        strokeWidth={2} 
-                        dot={{ strokeWidth: 2, r: 4 }}
-                        activeDot={{ r: 6 }}
+                        strokeWidth={3} 
+                        dot={{ strokeWidth: 2, r: 5, fill: chartColor }}
+                        activeDot={{ r: 7, fill: chartColor }}
                       />
                     </LineChart>
                   </ResponsiveContainer>
                 ) : (
                   <div className="flex items-center justify-center h-full text-gray-500">
-                    No data available for current month ({currentMonth})
+                    No data available for current period
                   </div>
                 )}
               </div>
-              <div className="mt-2 text-center text-sm font-medium">
+              <div className="text-center text-gray-300">
                 {trendDescription}
               </div>
             </div>
           </div>
-
         </div>
       )}
     </div>
   );
 };
 
+const MonetizationPotential = ({ data = sampleMonetization }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  const toggleDropdown = () => setIsOpen(!isOpen);
+  
+  return (
+    <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl mb-6 overflow-hidden">
+      <button
+        onClick={toggleDropdown}
+        className="w-full flex items-center justify-end p-6 hover:bg-gray-700/30 transition-all duration-300 group"
+      >
+        
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-400">{data.length} strategies</span>
+          {isOpen ? 
+            <ArrowUp className="h-5 w-5 text-gray-400 group-hover:text-white transition-colors" /> : 
+            <ArrowDown className="h-5 w-5 text-gray-400 group-hover:text-white transition-colors" />
+          }
+        </div>
+      </button>
+      
+      {isOpen && (
+        <div className="px-6 pb-6 space-y-4">
+          {data && data.map((item, index) => (
+            <div key={index} className="bg-gray-900/50 border border-gray-700 rounded-xl overflow-hidden">
+              <div className="bg-gray-800/50 border-b border-gray-700 px-4 py-3">
+                <h4 className="font-semibold text-white">{item.title}</h4>
+              </div>
+              <div className="p-4">
+                <p className="text-gray-300 leading-relaxed">{item.content}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const CompetitorAnalysis = ({ competitors = sampleCompetitors }) => {
+  const [isOpen, setIsOpen] = useState(true);
+  
+  const toggleDropdown = () => setIsOpen(!isOpen);
+  
+  const COLORS = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#6b7280'];
+  
+  const pieData = competitors.map(comp => ({
+    name: comp.name,
+    value: comp.traffic_share, 
+    traffic: comp.traffic
+  }));
+
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm">
+          <p className="font-semibold text-white">{payload[0].name}</p>
+          <p className="text-gray-300">{`Traffic Share: ${payload[0].value}%`}</p>
+          <p className="text-gray-300">{`Monthly: ${payload[0].payload.traffic}`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+  
+  const renderCustomizedLegend = (props) => {
+    const { payload } = props;
+    
+    if (!payload) return null;
+    
+    return (
+      <div className="mt-4 grid grid-cols-1 gap-2">
+        {payload.map((entry, index) => (
+          <div key={`item-${index}`} className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div 
+                className="w-3 h-3 rounded-sm mr-2" 
+                style={{ backgroundColor: entry.color }}
+              />
+              <span className="text-gray-300 text-sm">{entry.value}</span>
+            </div>
+            <span className="text-gray-400 text-sm">{entry.payload.value}%</span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl mb-6 overflow-hidden">
+      <button 
+        onClick={toggleDropdown}
+        className="w-full flex items-center justify-end p-6 hover:bg-gray-700/30 transition-all duration-300 group"
+      >
+        
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-400">{competitors.length} competitors</span>
+          {isOpen ? 
+            <ArrowUp className="h-5 w-5 text-gray-400 group-hover:text-white transition-colors" /> : 
+            <ArrowDown className="h-5 w-5 text-gray-400 group-hover:text-white transition-colors" />
+          }
+        </div>
+      </button>
+      
+      {isOpen && (
+        <div className="px-6 pb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Traffic Distribution Chart */}
+            <div className="bg-gray-900/50 border border-gray-700 rounded-xl overflow-hidden">
+              <div className="bg-gray-800/50 border-b border-gray-700 px-4 py-3">
+                <h4 className="font-semibold text-white">Traffic Distribution</h4>
+              </div>
+              <div className="p-4 h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="45%"
+                      innerRadius={50}
+                      outerRadius={80}
+                      paddingAngle={2}
+                      dataKey="value"
+                      stroke="none"
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip content={<CustomTooltip />} />
+                    <Legend 
+                      content={renderCustomizedLegend}
+                      verticalAlign="bottom"
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+            
+            {/* Competitor List */}
+            <div className="bg-gray-900/50 border border-gray-700 rounded-xl overflow-hidden">
+              <div className="bg-gray-800/50 border-b border-gray-700 px-4 py-3">
+                <h4 className="font-semibold text-white">Key Competitors</h4>
+              </div>
+              <div className="divide-y divide-gray-700">
+                {competitors.map((comp, index) => (
+                  <div key={comp.id || index} className="p-4 hover:bg-gray-700/30 transition-all duration-200">
+                    <div className="flex justify-between items-start mb-2">
+                      <a 
+                        href={comp.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="font-semibold text-white hover:text-purple-400 transition-colors flex items-center gap-1"
+                      >
+                        {comp.name}
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                      <span className="bg-gray-800 border border-gray-600 px-2 py-1 rounded text-xs text-gray-300">
+                        {comp.traffic}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-400 leading-relaxed">{comp.notes}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          {/* Get Full Analysis Button */}
+          <div className="mt-6 text-center">
+            <button className="bg-white text-black px-8 py-3 rounded-full font-medium hover:bg-gray-100 transition-all duration-200">
+              Get Full Analysis
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // Newsletter Component
 const NewsletterSignup = () => {
   return (
-    <div className="bg-blue-50 rounded-[16px] p-6 space-y-4 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-blue-100 rounded-full -translate-x-12 -translate-y-16 opacity-50"></div>
-      <h3 className="font-semibold relative z-10">Our SEO Newsletter</h3>
-      <p className="text-sm relative z-10">Get weekly updates on trending keywords and new product ideas.</p>
-      <div className="flex flex-col sm:flex-row gap-2 relative z-10">
-        <input 
-          type="email" 
-          placeholder="Your email" 
-          className="px-4 py-2 rounded border flex-1 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all duration-200"
-        />
-        <ThemeButton className="bg-white hover:bg-blue-50 transition-colors duration-200">
-          Subscribe
-        </ThemeButton>
+    <div className="bg-gradient-to-br from-purple-500/20 to-blue-500/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-8 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full -translate-x-12 -translate-y-16"></div>
+      <div className="relative z-10">
+        <h3 className="text-xl font-semibold text-white mb-3">Our SEO Newsletter</h3>
+        <p className="text-gray-300 mb-6 leading-relaxed">Get weekly updates on trending keywords and new product ideas.</p>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <input 
+            type="email" 
+            placeholder="Your email" 
+            className="flex-1 px-4 py-3 rounded-full bg-gray-900/50 border border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent focus:outline-none transition-all duration-200"
+          />
+          <button className="bg-white text-black px-6 py-3 rounded-full font-medium hover:bg-gray-100 transition-all duration-200 whitespace-nowrap">
+            Subscribe
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-const MonetizationPotential = ({ data = [] }: {data: MonetizationPotentialType[]}) => {
-    const [isOpen, setIsOpen] = useState(false);
-    
-    const toggleDropdown = () => setIsOpen(!isOpen);
-    
-    return (
-      <div className="border border-gray-400 mb-6 font-mono">
-        <button
-          onClick={toggleDropdown}
-          className="w-full flex items-center justify-between p-3 bg-white border-b border-gray-400 hover:bg-gray-200 transition-colors duration-300 text-sm uppercase tracking-wider"
-        >
-          <span className="font-bold">Monetization Potential</span>
-          {isOpen ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
-        </button>
-        
-        {isOpen && (
-        <div className="p-2 space-y-2">
-          {data && (
-            data.map((item, index) => (
-              <div key={index} className="border border-gray-300 bg-white">
-                <div className="bg-white border-b border-gray-300 px-2 py-1">
-                  <h4 className="text-xs uppercase tracking-wider font-bold">{item.title}</h4>
-                </div>
-                <div className="p-2">
-                  <p className="text-xs leading-relaxed">{item.content}</p>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      )}
-      </div>
-    );
-  };
 
+// Main Demo Component
 
-const CompetitorAnalysis = ({ competitors = []} : { competitors: Competitor[]}) => {
-    interface PieChartData {
-      name: string;
-      value: number;
-      traffic: number;
-    }
-    
-    interface CustomTooltipProps {
-      active?: boolean;
-      payload?: Array<{
-        name: string;
-        value: number;
-        payload: PieChartData;
-      }>;
-    }
-    
-    interface CustomLegendProps {
-      payload?: Array<{
-        value: string;
-        color: string;
-        payload: PieChartData;
-      }>;
-    }
-
-
-    const [isOpen, setIsOpen] = useState(true);
-    
-    const toggleDropdown = () => setIsOpen(!isOpen);
-    
-    const COLORS = ['#000000', '#333333', '#555555', '#777777', '#999999', '#BBBBBB'];
-    
-    const pieData: {
-      name: string;
-      value: number;
-      traffic: number;
-    }[] = competitors.map(comp => ({
-      name: comp.name,
-      value: comp.traffic_share, 
-      traffic: comp.traffic
-    }));
-  
-    const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
-      if (active && payload && payload.length) {
-        return (
-          <div className="border border-gray-400 bg-white p-2 font-mono text-xs">
-            <p className="font-bold">{payload[0].name}</p>
-            <p>{`Traffic Share: ${payload[0].value}%`}</p>
-            <p>{`Monthly: ${payload[0].payload.traffic}`}</p>
-          </div>
-        );
-      }
-      return null;
-    };
-    
-    // Custom legend that matches our design
-    const renderCustomizedLegend = (props: CustomLegendProps) => {
-      const { payload } = props;
-      
-      if (!payload) return null;
-      
-      return (
-        <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-1 font-mono text-xs">
-          {payload.map((entry, index) => (
-            <div key={`item-${index}`} className="flex items-center">
-              <div 
-                className="w-3 h-3 border border-gray-400" 
-                style={{ backgroundColor: entry.color }}
-              />
-              <span className="ml-2">
-                {entry.value} ({entry.payload.value}%)
-              </span>
-            </div>
-          ))}
-        </div>
-      );
-    };
-  
-    return (
-      <div className="border border-gray-400 mb-6 font-mono">
-        <button 
-          onClick={toggleDropdown}
-          className="w-full flex items-center justify-between p-3 bg-white border-b border-gray-400 hover:bg-gray-200 transition-colors duration-300 text-sm uppercase tracking-wider"
-        >
-          <span className="font-bold">Competitor Analysis</span>
-          {isOpen ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
-        </button>
-        
-        {isOpen && (
-          <div className="p-2">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              {/* Traffic Distribution Chart */}
-              <div className="border border-gray-400">
-                <div className="bg-white border-b border-gray-400 p-2 text-xs uppercase font-bold">
-                  Traffic Distribution
-                </div>
-                <div className="p-2 h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={pieData}
-                        cx="50%"
-                        cy="45%"
-                        innerRadius={40}
-                        outerRadius={60}
-                        paddingAngle={0}
-                        dataKey="value"
-                        stroke="#fff"
-                        strokeWidth={1}
-                      >
-                        {pieData.map((entry, index) => (
-                          <Cell 
-                            key={`cell-${index}`} 
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        ))}
-                      </Pie>
-                      <Tooltip content={<CustomTooltip />} />
-                      <Legend 
-                        content={renderCustomizedLegend}
-                        verticalAlign="bottom"
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-              
-              {/* Competitor List */}
-              <div className="border border-gray-400">
-                <div className="bg-white border-b border-gray-400 p-2 text-xs uppercase font-bold">
-                  Key Competitors
-                </div>
-                <div className="divide-y divide-gray-300">
-                  {competitors.map((comp, index) => (
-                    <div key={comp.id || index} className="p-2 text-xs hover:bg-gray-50">
-                      <div className="flex justify-between items-center mb-1">
-                        <a 
-                          href={comp.url} 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="font-bold underline"
-                        >
-                          {comp.name}
-                        </a>
-                        <span className="border border-gray-400 px-1">
-                          {comp.traffic}
-                        </span>
-                      </div>
-                      <p className="text-xs">{comp.notes}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            
-            
-            {/* Get Full Analysis Button */}
-            <div className="mt-2 text-center">
-              <Link href={'/ideas/order'}>
-              <button className="border border-black bg-white hover:bg-gray-200 py-2 px-4 text-xs uppercase tracking-widest font-bold"
-              >
-                
-                  Get Full Analysis
-              </button>
-              </Link>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
-  
-
-
-export {
-  CompetitorAnalysis, IdeaNotes, KeywordVariations, MarketAnalysis, MonetizationPotential, NewsletterSignup
-};
-
+ export { KeywordVariations, 
+          IdeaNotes, 
+          MarketAnalysis, 
+          MonetizationPotential,
+          CompetitorAnalysis,
+          NewsletterSignup,
+  }

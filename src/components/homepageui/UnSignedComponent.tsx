@@ -4,9 +4,8 @@ import React from 'react'
 
 const UnSignedComponent = () => {
   return (
-    <div className='pb-16'>
-        <Hero className=""/>
-        <ProductGrid/>
+    <div className='pb-16' >
+        <ProductGrid />
     </div>
   )
 }
