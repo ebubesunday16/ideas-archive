@@ -45,7 +45,7 @@ export default function SEOLandingPage() {
           <div className="relative">
             <div className="bg-gradient-to-b from-gray-900/50 to-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-2xl p-1">
               <div className="bg-gray-900 rounded-xl overflow-hidden">
-                <div className="h-96 bg-gradient-to-br from-gray-800/50 to-gray-900/50 flex items-center justify-center">
+                <div className="h-96 bg-gradient-to-br from-gray-800/50 to-gray-900/50 flex flex-col md:flex-row items-center justify-center gap-4">
                 <Image 
                       src={'/Group7.png'}
                       height={824}
@@ -273,7 +273,7 @@ export default function SEOLandingPage() {
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
                   <div>
-                    <div className="font-medium">Sarah Chen</div>
+                    <div className="font-medium">David Chukwuma</div>
                     <div className="text-sm text-gray-400">E-commerce founder</div>
                   </div>
                 </div>
@@ -291,7 +291,7 @@ export default function SEOLandingPage() {
                 <div className="flex items-center gap-3 mt-auto ">
                   <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"></div>
                   <div>
-                    <div className="font-medium">Mike Rodriguez</div>
+                    <div className="font-medium">Elvis James</div>
                     <div className="text-sm text-gray-400">SaaS founder</div>
                   </div>
                 </div>
@@ -309,7 +309,7 @@ export default function SEOLandingPage() {
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
                   <div>
-                    <div className="font-medium">Lisa Park</div>
+                    <div className="font-medium">Dan</div>
                     <div className="text-sm text-gray-400">Local business</div>
                   </div>
                 </div>
@@ -415,7 +415,7 @@ export default function SEOLandingPage() {
             <div className="text-center mb-16">
               <div className="inline-flex items-center gap-2 bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 rounded-full px-4 py-2 mb-6">
                 <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-                <span className="text-sm text-purple-300">Updated daily</span>
+                <span className="text-sm text-purple-300">Updated weekly</span>
               </div>
               
               <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
