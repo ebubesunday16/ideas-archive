@@ -119,7 +119,7 @@ const Page = async ({ params } : {params: {id: number}}) => {
                 <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
                   <Zap className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-sm text-purple-400 font-medium uppercase tracking-wide">Core Concept</span>
+                <span className="text-sm text-purple-400 font-medium uppercase tracking-wide">Main Keyword</span>
               </div>
               <h2 className="text-3xl font-bold mb-4 px-4">{ideaData.headline}</h2>
             </div>
