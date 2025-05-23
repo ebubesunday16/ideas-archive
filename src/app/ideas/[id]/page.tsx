@@ -94,7 +94,7 @@ const Page = async ({ params } : {params: {id: number}}) => {
 
               {/* Image Section */}
               <div className="relative">
-                <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl p-4 overflow-hidden">
+                
                   <Image
                     src={ideaData.image_url}
                     alt={ideaData.main_keyword}
@@ -103,7 +103,6 @@ const Page = async ({ params } : {params: {id: number}}) => {
                     className="w-full h-auto rounded-xl object-cover"
                   />
                 </div>
-              </div>
             </div>
           </div>
         </div>
