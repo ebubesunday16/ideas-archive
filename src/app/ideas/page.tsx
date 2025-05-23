@@ -8,7 +8,6 @@ export default async function Page() {
   
   const session = await getServerSession(authOptions)
   const feeds = getSortedFeeds()
-  console.log(feeds)
 
   return (
     <main className="pb-16">

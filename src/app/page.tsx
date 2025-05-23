@@ -475,12 +475,14 @@ export default function SEOLandingPage() {
                   Get your map now
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
                 </a>
-                <button className="border border-gray-600 text-gray-300 px-8 py-4 rounded-full font-medium hover:border-gray-500 hover:text-white transition-all duration-200 flex items-center gap-2"
-                onClick={() => signIn('google')}
+                <Link 
+                href={'/api/auth/signin'}
+                className="border border-gray-600 text-gray-300 px-8 py-4 rounded-full font-medium hover:border-gray-500 hover:text-white transition-all duration-200 flex items-center gap-2"
+                
                 >
                   <div className="w-4 h-4 bg-gradient-to-r from-blue-500 to-red-500 rounded-sm"></div>
                   Continue with Google
-                </button>
+                </Link>
               </div>
               
               
