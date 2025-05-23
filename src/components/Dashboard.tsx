@@ -9,7 +9,7 @@ import { User, Heart, TrendingUp, Calendar, Mail, Shield, Bookmark, Eye, Trash2,
 const SkeletonLoader = () => {
   return (
     <div className="min-h-screen bg-gray-950">
-      <div className="bg-gray-900/50 backdrop-blur-sm border-b border-gray-800 p-6 animate-pulse">
+      <div className="bg-gray-900/50 backdrop-blur-sm border-b border-gray-800 px-2 py-6 animate-pulse">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="h-6 bg-gray-700 rounded w-48"></div>
           <div className="h-10 bg-gray-700 rounded-full w-24"></div>
@@ -122,7 +122,7 @@ export default function Dashboard() {
 
   if (status === 'unauthenticated') {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center px-2 py-6">
         <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl p-12 max-w-md w-full text-center">
           <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl mx-auto mb-6 flex items-center justify-center">
             <User className="w-8 h-8 text-white" />
