@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   
 
   images: {
-    domains: ['i.imgur.com', 'imagur.com'],
+    domains: ['i.imgur.com', 'imagur.com', 'substackcdn.com'],
   },
 
   typescript: {
