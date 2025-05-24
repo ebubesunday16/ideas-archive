@@ -6,6 +6,8 @@ import Link from 'next/link';
 import SubscriptionButton from '@/components/SubscriptionButton';
 import Image from 'next/image';
 import { signIn } from 'next-auth/react';
+import ProfileGrid from '@/components/ProfileMap';
+import { profilemap } from '@/assets/images';
 
 export default function SEOLandingPage() {
   return (
@@ -27,7 +29,10 @@ export default function SEOLandingPage() {
           <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
             While others fight over saturated keywords, we find the search gaps no one is targeting yet. 
           </p>
+          <div className='flex justify-center mb-12'>
 
+            <ProfileGrid />
+          </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
             <button className="group bg-white text-black px-6 py-3 rounded-full font-medium hover:bg-gray-100 transition-all duration-200 flex items-center gap-2 cursor-pointer">
               <Link href={'#pricing'}>
@@ -271,7 +276,15 @@ export default function SEOLandingPage() {
                   "Finally found keywords my competitors weren't targeting. Traffic doubled in 3 months. This actually works."
                 </p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
+                  <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
+                    <Image 
+                    src={profilemap[6]}
+                    width={40}
+                    height={40}
+                    alt="David Chukwuma's profile picture"
+                    className='w-full h-full'
+                    />
+                  </div>
                   <div>
                     <div className="font-medium">David Chukwuma</div>
                     <div className="text-sm text-gray-400">E-commerce founder</div>
@@ -285,14 +298,23 @@ export default function SEOLandingPage() {
                     <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <p className="text-gray-300 leading-relaxed ">
+                <p className="text-gray-300 leading-relaxed mb-6">
                   "Didn't know SEO can be this easy. Game changer."
                 </p>
                 <div className="flex items-center gap-3 mt-auto ">
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"></div>
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full">
+                  <Image 
+                    src={profilemap[0]}
+                    width={40}
+                    height={40}
+                    alt="Glory profile picture"
+                    className='w-full h-full'
+                    />
+                  </div>
+
                   <div>
-                    <div className="font-medium">Elvis James</div>
-                    <div className="text-sm text-gray-400">SaaS founder</div>
+                    <div className="font-medium">Glory</div>
+                    <div className="text-sm text-gray-400">Anonymous</div>
                   </div>
                 </div>
               </div>
@@ -310,7 +332,7 @@ export default function SEOLandingPage() {
                   <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
                   <div>
                     <div className="font-medium">Dan</div>
-                    <div className="text-sm text-gray-400">Local business</div>
+                    <div className="text-sm text-gray-400">Substack Subscriber / Pledge-r</div>
                   </div>
                 </div>
               </div>
