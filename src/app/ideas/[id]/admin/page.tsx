@@ -270,7 +270,7 @@ export default function EditIdeaAdmin() {
   }
   
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto py-8 px-4 text-black">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Edit Idea #{ideaId}</h1>
         <ThemeButton onClick={() => router.push('/admin')} className="bg-gray-200 text-gray-800">
