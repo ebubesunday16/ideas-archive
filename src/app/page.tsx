@@ -366,7 +366,7 @@ export default function SEOLandingPage() {
                 <div className="text-center mb-8">
                   <h3 className="text-2xl font-semibold mb-4">Custom Topical Map</h3>
                   <div className="mb-4">
-                    <span className="text-5xl font-bold">$499</span>
+                    <span className="text-5xl font-bold">$129</span>
                     <span className="text-gray-400 ml-2">one-time</span>
                   </div>
                   <p className="text-gray-400">Everything you need to dominate your niche</p>
